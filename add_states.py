@@ -12,6 +12,7 @@ import numpy as np
 def process_data(csv, zips):
     token = csv[:-4]
     df = pd.read_csv(csv)
+    df['zip_code'] = df.apply(lambda x: int(x['zip_code']), axis = 1)
     zips = pd.read_csv(zips, usecols=['Zipcode','State'])
     zips.rename(index=str, columns={'Zipcode':'zip_code'}, inplace=True)
     final = df.merge(zips, on='zip_code', how='inner', copy=False)
