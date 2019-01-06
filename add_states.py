@@ -1,6 +1,9 @@
 ####################
 # Jack Deschler
 # Adds states to comScore demographics tht have been pulled out 
+# Usage: python3 <csv> <zips>
+#   csv: the csv file containing demographic data, transformed as per other scripts
+#   zips: the file containging zip codes and states
 ####################
 import sys
 import pandas as pd
