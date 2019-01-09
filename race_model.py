@@ -9,7 +9,7 @@ import pandas as pd
 import scipy as sp
 import sys
 import gc
-from joblib import dump, load
+#from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 
@@ -143,10 +143,10 @@ def fit_models(df_final):
     return {'log': log_model, 'rf': rf_model}
 
 def main():
-    if not sys.argv[1] or not sys.argv[2]:
+    if len(sys.argv) < 3 or len(sys.argv) > 4:
         print("Usage: python3 race_model.py comScore demos [n]")
         exit(1)
-    if sys.argv[3]:
+    if len(sys.argv) == 4:
         sample = get_subsample(sys.argv[1], sys.argv[2], n = int(sys.argv[3]))
     else:
         sample = get_subsample(sys.argv[1], sys.argv[2])
