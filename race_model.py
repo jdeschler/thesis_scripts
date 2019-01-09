@@ -7,6 +7,7 @@
 import numpy as np
 import pandas as pd
 import scipy as sp
+import sys
 from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
@@ -63,7 +64,7 @@ def fit_log_model(df_train, df_test, response = 'racial_background', demos = ['m
     
     log_model = LogisticRegressionCV()
     
-    print("fitting")
+    print("fitting log model")
 
     log_model.fit(x_train, y_train)
 
@@ -79,7 +80,7 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
                    'country_of_origin','zip_code'], response = 'racial_background', n_estimators = 256, max_depth = 48):
     
     rf_model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth)
-    print("fitting model")
+    print("fitting random forest model")
     preds = list(set(list(df_train)) - set([response] + demos))
     
     rf_model.fit(df_train[preds], df_train[response])
@@ -123,7 +124,7 @@ def get_subsample(sessions, demos, n = 20000):
     subsample_numbers = demos_sample['machine_id']
 
     # read in the actual file and clean it here
-    df_full = pd.read_csv(infile)
+    df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
     df_final = transform_mat(sample)
     return df_final
@@ -133,3 +134,18 @@ def fit_models(df_final):
     log_model = fit_log_model(train, test)
     rf_model = fit_rf_model(train, test)
     return {'log': log_model, 'rf': rf_model}
+
+def main():
+    if not sys.argv[1] or not sys.argv[2]:
+        print("Usage: python3 race_model.py comScore demos [n]")
+        exit(1)
+    if sys.argv[3]:
+        sample = get_subsample(sys.argv[1], sys.argv[2], n = int(sys.argv[3]))
+    else:
+        sample = get_subsample(sys.argv[1], sys.argv[2])
+    fit_models(sample)
+    exit(0) 
+
+if __name__ == '__main__':
+    print(sys.argv)
+    main()
