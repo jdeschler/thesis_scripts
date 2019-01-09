@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 import scipy as sp
 import sys
+import gc
 from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
@@ -127,6 +128,12 @@ def get_subsample(sessions, demos, n = 20000):
     df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
     df_final = transform_mat(sample)
+
+    # force memory garbage collection
+    demos = None
+    df_full = None
+    sample = None
+    gc.collect()
     return df_final
 
 def fit_models(df_final):
@@ -147,5 +154,4 @@ def main():
     exit(0) 
 
 if __name__ == '__main__':
-    print(sys.argv)
     main()
