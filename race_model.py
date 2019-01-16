@@ -63,7 +63,7 @@ def fit_log_model(df_train, df_test, response = 'racial_background', demos = ['m
     x_train = df_train[predictors]
     x_test = df_test[predictors]
     
-    log_model = LogisticRegressionCV()
+    log_model = LogisticRegressionCV(cv = 5, max_iter = 10000)
     
     print("fitting log model")
 
