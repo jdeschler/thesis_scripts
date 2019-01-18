@@ -130,12 +130,6 @@ def get_subsample(sessions, demos, n = 20000):
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
     df_final = transform_mat(sample)
     
-    # MinMax scaling
-    scaler = MinMaxScaler()
-    cols = list(df_final)
-    df_final = pd.DataFrame(scaler.fit_transform(df_final), columns = cols)
-    print("Finished MinMax scaling")
-
     # force memory garbage collection
     demos = None
     df_full = None
