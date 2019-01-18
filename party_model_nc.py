@@ -25,11 +25,10 @@ def transform_mat(df):
                    'D_pct', 'D_pct_2p']]
     df_demos = df_demos.drop_duplicates('machine_id')
     # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
-         'tran_flg', 'hoh_most_education', 'census_region',
+    df = df.drop(['hoh_most_education', 'census_region',
          'household_size', 'hoh_oldest_age', 'household_income',
          'children', 'racial_background','connection_speed',
-         'country_of_origin','zip_code', 'vf_k', 'vf_k_2p'
+         'country_of_origin','zip_code', 'vf_k', 'vf_k_2p',
          'D_pct', 'D_pct_2p'], axis = 1)
     # use pivot to get the data in the format we want
     df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = np.sum)
