@@ -12,6 +12,7 @@ import gc
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import MinMaxScaler
 
 # from cleaning.py, fwiw this is the clunky version
 def transform_mat(df):
@@ -63,7 +64,7 @@ def fit_log_model(df_train, df_test, response = 'racial_background', demos = ['m
     x_train = df_train[predictors]
     x_test = df_test[predictors]
     
-    log_model = LogisticRegressionCV(cv = 5, max_iter = 10000)
+    log_model = LogisticRegressionCV(cv = 5, max_iter = 1000)
     
     print("fitting log model")
 
@@ -128,6 +129,12 @@ def get_subsample(sessions, demos, n = 20000):
     df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
     df_final = transform_mat(sample)
+    
+    # MinMax scaling
+    scaler = MinMaxScaler()
+    cols = list(df_final)
+    df_final = pd.DataFrame(scaler.fit_transform(df_final), columns = cols)
+    print("Finished MinMax scaling")
 
     # force memory garbage collection
     demos = None
