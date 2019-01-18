@@ -32,6 +32,7 @@ def transform_mat(df):
     df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = np.sum)
     df = pd.DataFrame(df.to_records())
     df = df.fillna(0)
+    print("{} columns in the transformed matrix".format(len(list(df))))
     # merge demographics back, and write final
     final = df.merge(df_demos, on = 'machine_id')
     return final 
