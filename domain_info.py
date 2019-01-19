@@ -27,6 +27,7 @@ def main():
         avg = sum(l) / float(len(l))
         result.append([n, avg], columns=['users','domains'])
     result.to_csv(outfile)
+    print("Written to: " + outfile)
 
 if __name__ == '__main__':
     main()
