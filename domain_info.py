@@ -26,7 +26,7 @@ def main():
             tmp = df.sample(n)
             lst.append(len(tmp['domain_name'].unique()))
         avg = sum(lst) / float(len(lst))
-        result.append([n, avg], columns=['users','domains'])
+        result.append(pd.DataFrame([n, avg], columns=['users','domains']))
     result.to_csv(outfile)
     print("Written to: " + outfile)
 
