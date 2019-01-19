@@ -17,7 +17,7 @@ def main():
     outfile = 'users_domains.csv' if not args.outfile else args.outfile
     trials = 10 if not args.trials else args.trials
     df = pd.read_csv(args.Sessions)
-    result = pd.DataFrame(columns = ['users', 'domains']
+    result = pd.DataFrame(columns = ['users', 'domains'])
     ns = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
     for n in ns:
         lst = []
