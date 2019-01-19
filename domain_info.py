@@ -20,11 +20,12 @@ def main():
     result = pd.DataFrame(columns = ['users', 'domains'])
     ns = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
     for n in ns:
+        print(n)
         lst = []
         for _t in range(trials):
             tmp = df.sample(n)
             lst.append(len(tmp['domain_name'].unique()))
-        avg = sum(l) / float(len(l))
+        avg = sum(lst) / float(len(lst))
         result.append([n, avg], columns=['users','domains'])
     result.to_csv(outfile)
     print("Written to: " + outfile)
