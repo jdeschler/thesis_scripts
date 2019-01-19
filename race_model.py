@@ -129,6 +129,7 @@ def get_subsample(sessions, demos, n = 20000):
     # read in the actual file and clean it here
     df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
+    print("{} unique domains in sample".format(len(sample['domain_name'].unique())))
     df_final = transform_mat(sample)
     
     # force memory garbage collection
