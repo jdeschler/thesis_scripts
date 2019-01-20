@@ -157,9 +157,9 @@ def get_subsample(sessions, demos, n = -1):
 
 def fit_models(df_final):
     train, test = split_data(df_final)
-    log_model = fit_log_model(train, test)
+    #log_model = fit_log_model(train, test)
     rf_model = fit_rf_model(train, test)
-    return {'log': log_model, 'rf': rf_model}
+    return {'rf': rf_model}
 
 def main():
     parser.add_argument("-tp", "--twoparty",  help='run on 2 party stats', action='store_true')
