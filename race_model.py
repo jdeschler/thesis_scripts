@@ -9,10 +9,12 @@ import pandas as pd
 import scipy as sp
 import argparse
 import gc
+import matplotlib.pyplot as plt
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
+from skelarn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
 
 # from cleaning.py, fwiw this is the clunky version
@@ -38,6 +40,37 @@ def transform_mat(df):
     final = df.merge(df_demos, on = 'machine_id')
     return final 
 
+# create and print our confusion matrix!
+# adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
+def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
+                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
+    cm = confusion_matrix(y_true, y_pred)
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.savefig('confmat.png')
+
 # Helper functions from CS109a final
 def split_data(df, threshold = 0.8):
     msk = np.random.rand(len(df)) < threshold
@@ -48,6 +81,7 @@ def split_data(df, threshold = 0.8):
     return (data_train, data_test)
 
 def classification_accuracy(y_true, y_pred):
+    plot_conf_mat(y_true, y_pred)
     total_missed = 0
     for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
