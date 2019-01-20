@@ -13,6 +13,7 @@ import gc
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
 
 # from cleaning.py, fwiw this is the clunky version
