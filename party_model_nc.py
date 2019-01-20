@@ -39,6 +39,28 @@ def transform_mat(df):
     return final 
 
 # Helper functions from CS109a final
+def conf_mat(y_real, y_pred):
+    tn, fp, fn, tp = confusion_matrix(y_real, y_pred).ravel()
+    
+    print("\nCONFUSION MATIX:")
+    print("{0:6} {1:6} {2:6}".format("", "pred +", "pred -"))
+    print("{0:6} {1:6} {2:6}".format("true +", tp, fn))
+    print("{0:6} {1:6} {2:6}".format("true -", fp, tn))
+    
+    if tp == 0 and fp == 0:
+        tpr = 0
+    else:
+        tpr = tp / (tp + fp)
+        
+    if tn == 0 and fn == 0:
+        tnr = 0
+    else:
+        tnr = tn / (tn + fn)
+    
+    print("\nTRUE POSITIVE:", tpr)
+    print("TRUE NEGATIVE:", tnr)
+
+
 def split_data(df, threshold = 0.8):
     msk = np.random.rand(len(df)) < threshold
 
@@ -48,8 +70,6 @@ def split_data(df, threshold = 0.8):
     return (data_train, data_test)
 
 def classification_accuracy(y_true, y_pred):
-    print(y_true[:5])
-    print(y_pred[:5])
     total_missed = 0
     for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
@@ -93,6 +113,7 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
         
     y_hat = rf_model.predict(df_test[preds])
     print("Overall accuracy: {}".format(classification_accuracy(df_test['democrat'].values, y_hat)))
+    conf_mat(df_test['democrat'].values, y_hat)
     return rf_model
 
 ############################################################################
