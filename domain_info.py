@@ -26,7 +26,6 @@ def main():
         for _t in range(trials):
             tmp = users.sample(n)
             sample = df[df['machine_id'].isin(tmp[0])]
-            print(len(sample['domain_name'].unique()))
             lst.append(len(sample['domain_name'].unique()))
         avg = sum(lst) / float(len(lst))
         avgs.append(avg)    
