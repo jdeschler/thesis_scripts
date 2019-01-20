@@ -8,8 +8,8 @@ import argparse
 import numpy as np
 import pandas as pd
 import scipy as sp
-import sys
 import gc
+import itertools
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
