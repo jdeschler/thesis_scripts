@@ -19,13 +19,15 @@ def main():
     df = pd.read_csv(args.Sessions)
     ns = [1, 10, 50, 100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000]
     avgs = []
+    users = pd.DataFrame(df['machine_id'].unique())
     for n in ns:
         print(n)
         lst = []
         for _t in range(trials):
-            tmp = df.sample(n)
-            print(len(tmp['domain_name'].unique()))
-            lst.append(len(tmp['domain_name'].unique()))
+            tmp = users.sample(n)
+            sample = df[df['machine_id'].isin(tmp[0])]
+            print(len(sample['domain_name'].unique()))
+            lst.append(len(sample['domain_name'].unique()))
         avg = sum(lst) / float(len(lst))
         avgs.append(avg)    
     result = pd.DataFrame({'users': ns, 'domains': avgs})
