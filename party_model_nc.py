@@ -48,6 +48,8 @@ def split_data(df, threshold = 0.8):
     return (data_train, data_test)
 
 def classification_accuracy(y_true, y_pred):
+    print(y_true[:5])
+    print(y_pred[:5])
     total_missed = 0
     for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
