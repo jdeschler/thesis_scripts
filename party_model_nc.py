@@ -134,7 +134,7 @@ def subsample(n, df, demos = ['racial_background'], targets = [{1: .766, 2: .134
 #################################################################
 def classify_party(df, threshold = 0.8, two_party = True):
     comp_col = 'D_pct_2p' if two_party else 'D_pct'
-    df['democrat'] = 1 if df[comp_col] > threshold else 0
+    df['democrat'] = df.apply(lambda row: 1 if row[comp_col] > threshold else 0) 
     return df
 
 def get_subsample(sessions, demos, n = -1):
