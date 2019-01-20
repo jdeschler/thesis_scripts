@@ -7,12 +7,13 @@
 import numpy as np
 import pandas as pd
 import scipy as sp
-import sys
+import argparse
 import gc
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
+parser = argparse.ArgumentParser()
 
 # from cleaning.py, fwiw this is the clunky version
 def transform_mat(df):
@@ -146,13 +147,12 @@ def fit_models(df_final):
     return {'rf': rf_model}
 
 def main():
-    if len(sys.argv) < 3 or len(sys.argv) > 4:
-        print("Usage: python3 race_model.py comScore demos [n]")
-        exit(1)
-    if len(sys.argv) == 4:
-        sample = get_subsample(sys.argv[1], sys.argv[2], n = int(sys.argv[3]))
-    else:
-        sample = get_subsample(sys.argv[1], sys.argv[2])
+    parser.add_argument('-n', type=int, help='size of subsample')
+    parser.add_argument('Sessions', help='comScore Sessions file')
+    parser.add_argument('demos', help='comScore demographics file')
+    args = parser.parse_args()
+    n = 20000 if not args.n else args.n
+    sample = get_subsample(args.Sessions, args.demos, n=n)
     fit_models(sample)
     exit(0) 
 
