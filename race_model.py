@@ -140,8 +140,8 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
 ############################################################################
 
 # TODO: is this an ok way? just picking n*w_k instead of how you would think by generating a random every time
-
-def subsample(n, df, demos = ['racial_background'], targets = [{1: .766, 2: .134, 3: .058, 5: .042}]):
+# TARGETS NOT CURRENTLY SET TO CENSUS
+def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
     # start with code for just one demographic axis
     demo = demos[0]
     target = targets[0]
