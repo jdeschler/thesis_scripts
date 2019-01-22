@@ -143,6 +143,7 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
 # TARGETS NOT CURRENTLY SET TO CENSUS
 def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
     # start with code for just one demographic axis
+    targets = [{1:.5, 2:.5, 3:0, 5:0}]
     demo = demos[0]
     target = targets[0]
     keys = list(target.keys())
