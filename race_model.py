@@ -9,6 +9,8 @@ import pandas as pd
 import scipy as sp
 import argparse
 import gc
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 #from joblib import dump, load
 import itertools
@@ -128,6 +130,29 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
     print("Overall accuracy: {}".format(classification_accuracy(df_test['racial_background'].values, y_hat)))
     return rf_model
 
+################# EXCLUSIVITY INDEX MODELING ###############################
+
+# calc_exclusivity()
+# inputs:
+#   df: the sample dataframe, with both demographics and matrix tranformation done
+#   axis: racial axis to calculate indices on
+#   n: number of top exclusivity indices to return
+# returns:
+#   dictionary of axis codes: top n domains by exclusivity index
+
+def calc_exclusivity(df, axis, n = 100):
+    codes = list(np.unique(df[axis].values))
+    excl_indices = {c: {} for c in codes}
+    domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
+    domains = list(domains)
+    for d in domains:
+        fracs = {c: len(df[df[axis] == c].loc[df[d] > 0])/len(df[df[axis] == c]) for c in codes}
+        denom = sum(fracs.values())
+        for c in codes:
+            excl_indices[c][d] = fracs[c]/denom
+    final = {c: sorted(excl_indices[c], key = excl_indices[c].__getitem__)[:n] for c in codes}
+    return final
+
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
 #  IN: 
@@ -189,7 +214,8 @@ def main():
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
     sample = get_subsample(args.Sessions, args.demos, n=n)
-    fit_models(sample)
+    #fit_models(sample)
+    print(calc_exclusivity(sample, 'racial_background', n = 10))
     exit(0) 
 
 if __name__ == '__main__':
