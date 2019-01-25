@@ -138,19 +138,30 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
 #   axis: racial axis to calculate indices on
 #   n: number of top exclusivity indices to return
 # returns:
-#   dictionary of axis codes: top n domains by exclusivity index
+#   dictionary of axis codes: top n domains by exclusivity index, over 95%, and by # of visits
 
-def calc_exclusivity(df, axis, n = 100):
+def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.9):
     codes = list(np.unique(df[axis].values))
-    excl_indices = {c: {} for c in codes}
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
     domains = list(domains)
-    for d in domains:
-        fracs = {c: len(df[df[axis] == c].loc[df[d] > 0])/len(df[df[axis] == c]) for c in codes}
+    ph = [0] * len(domains)
+    final_df = pd.DataFrame({'domain': domains, 'visits': ph})
+    for c in codes:
+        final_df[c] = ph
+    counter = 0
+    for idx, row in final_df.iterrows():
+        d = row['domain']
+        visits = df[d].sum()
+        fracs = {c: len(df[df[axis] == c][d].nonzero()[0])/len(df[df[axis] == c]) for c in codes}
         denom = sum(fracs.values())
         for c in codes:
-            excl_indices[c][d] = fracs[c]/denom
-    final = {c: sorted(excl_indices[c], key = excl_indices[c].__getitem__)[:n] for c in codes}
+            final_df.at[idx, c] = fracs[c]/denom
+        final_df.at[idx, 'visits'] = visits
+        counter += 1
+        if counter % 10000 == 0:
+            print("{}/{} domains processed".format(counter, len(domains)))
+    final_df.to_csv(outfile, index = False)
+    final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
 ############################################################################
