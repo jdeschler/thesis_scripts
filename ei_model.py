@@ -215,8 +215,10 @@ def main():
     parser.add_argument('-n', type=int, help='size of subsample')
     parser.add_argument('Sessions', help='comScore Sessions file')
     parser.add_argument('demos', help='comScore demographics file')
+    parser.add_argument('-o', '--outfile', help='slug for outfile for exclusivity indices')
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
+    out = 'exclusivity_indices' if not args.outfile else str(args.outfile)
     sample = get_subsample(args.Sessions, args.demos, n=n)
     print(calc_exclusivity_v2(sample, 'racial_background', n = 10))
     exit(0) 
