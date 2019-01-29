@@ -39,12 +39,12 @@ def transform_mat(df):
     df = pd.DataFrame(df.to_records())
     df = df.fillna(0)
     # essentially cast to bools and make it happen
-    for row in list(df):
-        df[row] = df[row].mask(df[row] > 0, 1)
+    cols = list(set(list(df)) - set(['machine_id']))
+    for col in cols:
+        df[col] = df[col].astype(bool).astype(int) 
     print("{} columns in the transformed matrix".format(len(list(df))))
     # merge demographics back, and write final
     final = df.merge(df_demos, on = 'machine_id')
-    
     return final 
 
 # create and print our confusion matrix!
@@ -129,33 +129,38 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
     final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
-def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices', threshold = 0.9):
+def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.9):
     codes = list(np.unique(df[axis].values))
-    outfile = outfile + axis + '.csv'
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
     domains = list(domains)
-    ph = [0] * len(domains)
+    ph = [0.] * len(domains)
     visits = {c: df[df[axis] == c].sum() for c in codes}
-    lengths = {c: len(visits[c]) for c in codes}
-    lengths['total'] = len(domains)
+    lengths = {c: len(df[df[axis] == c]) for c in codes}
+    lengths['total'] = len(df)
+    print(lengths)
     visits_df = pd.DataFrame({'domain': domains, 'visits': ph})
     for c in codes:
         visits_df[c] = ph
     counter = 0
     for idx, row in visits_df.iterrows():
         tot = 0
+        d = row['domain']
         for c in codes:
-            d = row['domain']
-            tmp = visits[c][d]
-            visits_df.at[idx, c] = tmp/lengths[c]
+            tmp = float(visits[c][d])
+            tmp2 = tmp/float(lengths[c])
+            # Now the problem is here TODO
+            visits_df.at[idx, c] = tmp/float(lengths[c])
             tot += tmp
         visits_df.at[idx, 'visits'] = tot
         counter += 1
         if counter % 10000 == 0:
-            print('{}/{} domains processed'.format(counter, lengths['total']))
+            print('{}/{} domains processed'.format(counter, len(domains)))
+    print(type(tmp))
     # have visit fractions, must process them now
     print('final processing on fractions')
-    visits_df['tot'] = visits_df.drop('visits', axis = 1).sum(axis = 1)
+    print(lengths)
+    print(visits_df.head())
+    visits_df['tot'] = visits_df.drop(['visits','domain'], axis = 1).sum(axis = 1)
     for c in codes:
         visits_df[c] = visits_df[c] / visits_df['tot']
     visits_df.to_csv(outfile, index = False)
@@ -220,7 +225,7 @@ def main():
     n = 20000 if not args.n else args.n
     out = 'exclusivity_indices' if not args.outfile else str(args.outfile)
     sample = get_subsample(args.Sessions, args.demos, n=n)
-    print(calc_exclusivity_v2(sample, 'racial_background', n = 10))
+    print(calc_exclusivity_v2(sample, 'racial_background', n = 10, outfile = out))
     exit(0) 
 
 if __name__ == '__main__':
