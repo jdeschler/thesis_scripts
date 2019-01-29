@@ -38,9 +38,13 @@ def transform_mat(df):
     df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = np.sum)
     df = pd.DataFrame(df.to_records())
     df = df.fillna(0)
+    # essentially cast to bools and make it happen
+    for row in list(df):
+        df[row] = df[row].mask(df[row] > 0, 1)
     print("{} columns in the transformed matrix".format(len(list(df))))
     # merge demographics back, and write final
     final = df.merge(df_demos, on = 'machine_id')
+    
     return final 
 
 # create and print our confusion matrix!
@@ -125,6 +129,40 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
     final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
+def calc_exlcusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices', threshold = 0.9):
+    codes = list(np.unique(df[axis].values))
+    outfile = outfile + axis + '.csv'
+    domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
+    domains = list(domains)
+    ph = [0] * len(domains)
+    visits = {c: df[df[axis] == c].sum() for c in codes}
+    lengths = {c: len(visits[c]) for c in codes}
+    lengths['total'] = len(domains)
+    visits_df = pd.DataFrame({'domain': domains, 'visits': ph})
+    for c in codes:
+        visits_df[c] = ph
+    counter = 0
+    for idx, row in visits_df.iterrows():
+        tot = 0
+        for c in codes:
+            d = row['domain']
+            tmp = visits[c][d]
+            visits_df.at[idx, c] = tmp/lengths[c]
+            tot += tmp
+        visits_df.at[idx, 'visits'] = tot
+        counter += 1
+        if counter % 10000 == 0:
+            print('{}/{} domains processed'.format(counter, lengths['total']))
+    # have visit fractions, must process them now
+    print('final processing on fractions')
+    visits_df['tot'] = visits_df.drop('visits', axis = 1).sum(axis = 1)
+    for c in codes:
+        visits_df[c] = visits_df[c] / visits_df['tot']
+    visits_df.to_csv(outfile, index = False)
+    final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
+    return final
+
+
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
 #  IN: 
@@ -140,7 +178,7 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
 # TARGETS NOT CURRENTLY SET TO CENSUS
 def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
     # start with code for just one demographic axis
-    targets = [{1:.5, 2:.5, 3:0, 5:0}]
+    targets = [{1:.5, 2:.35, 3:.1, 5:.05}]
     demo = demos[0]
     target = targets[0]
     keys = list(target.keys())
@@ -180,7 +218,7 @@ def main():
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
     sample = get_subsample(args.Sessions, args.demos, n=n)
-    print(calc_exclusivity(sample, 'racial_background', n = 10))
+    print(calc_exclusivity_v2(sample, 'racial_background', n = 10))
     exit(0) 
 
 if __name__ == '__main__':
