@@ -144,7 +144,6 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
         for c in codes:
             tmp = float(visits[c][d])
             tmp2 = tmp/float(lengths[c])
-            # Now the problem is here TODO
             visits_df.at[idx, c] = tmp/float(lengths[c])
             tot += tmp
         visits_df.at[idx, 'visits'] = tot
@@ -154,11 +153,10 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     print(type(tmp))
     # have visit fractions, must process them now
     print('final processing on fractions')
-    print(lengths)
-    print(visits_df.head())
     visits_df['tot'] = visits_df.drop(['visits','domain'], axis = 1).sum(axis = 1)
     for c in codes:
         visits_df[c] = visits_df[c] / visits_df['tot']
+    print(visits_df.head())
     visits_df.to_csv(outfile, index = False)
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
