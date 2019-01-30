@@ -35,13 +35,9 @@ def transform_mat(df):
          'children', 'racial_background','connection_speed',
          'country_of_origin','zip_code'], axis = 1)
     # use pivot to get the data in the format we want
-    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = np.sum)
+    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
     df = pd.DataFrame(df.to_records())
     df = df.fillna(0)
-    # essentially cast to bools and make it happen
-    cols = list(set(list(df)) - set(['machine_id']))
-    for col in cols:
-        df[col] = df[col].astype(bool).astype(int) 
     print("{} columns in the transformed matrix".format(len(list(df))))
     # merge demographics back, and write final
     final = df.merge(df_demos, on = 'machine_id')
