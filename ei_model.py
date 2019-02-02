@@ -161,6 +161,7 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
         visits_df[c] = visits_df[c] / visits_df['tot']
     print(visits_df.head())
     if outfile:
+        print("HELLO")
         visits_df.to_csv(outfile, index = False)
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
