@@ -10,10 +10,12 @@ import scipy as sp
 import argparse
 import gc
 import matplotlib
+import operator
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 #from joblib import dump, load
 import itertools
+from collections import Counter
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
@@ -121,7 +123,8 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
         counter += 1
         if counter % 10000 == 0:
             print("{}/{} domains processed".format(counter, len(domains)))
-    final_df.to_csv(outfile, index = False)
+    if outfile:
+        final_df.to_csv(outfile, index = False)
     final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
@@ -157,10 +160,27 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     for c in codes:
         visits_df[c] = visits_df[c] / visits_df['tot']
     print(visits_df.head())
-    visits_df.to_csv(outfile, index = False)
+    if outfile:
+        visits_df.to_csv(outfile, index = False)
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
+def ei_classifier(eis, df, outcome):
+    y_true = df[outcome].values
+    df['pred'] = 0
+    for idx, row in df.iterrows():
+        counts = {c: 0 for c in list(eis)}
+        for c in list(eis):
+            domains = df[c]
+            for d in domains:
+                try if row[d] > 0:
+                    counts[c] += 1
+                except KeyError:
+                    pass
+        classify = max(counts.items(), key=operator.itemgetter(1))[0]
+        df.at[idx, 'pred'] = classify
+    y_hat = df['pred'].values
+    print("Overall accuracy: {}".format(classification_accuracy(y_true, y_hat)))
 
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
@@ -215,11 +235,32 @@ def main():
     parser.add_argument('Sessions', help='comScore Sessions file')
     parser.add_argument('demos', help='comScore demographics file')
     parser.add_argument('-o', '--outfile', help='slug for outfile for exclusivity indices')
+    parser.add_argument('-f' '--file', help='file to read in EIs')
+    parser.add_argumet('axis', help='axis to calculate on')
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
+    outcome = arg.axis
     out = 'exclusivity_indices' if not args.outfile else str(args.outfile)
-    sample = get_subsample(args.Sessions, args.demos, n=n)
-    print(calc_exclusivity_v2(sample, 'racial_background', n = 10, outfile = out))
+    excl_indices = None
+    if not args.file:
+        eis = []
+        ei_df = pd.DataFrame()
+        for i in range(1):
+            sample = get_subsample(args.Sessions, args.demos, n=n)
+            eis.append(calc_exclusivity_v2(sample, axis, n = 100, outfile = None)
+        for c in eis[0].keys():
+            l = [a for b[0] in eis for a in b]
+            counts = dict(Counter(l))
+            counts = sorted(counts.items(), key=lambda kv: kv[1])
+            counts = [c for (c,_) in counts[:100]]
+            ei_df[c] = counts
+        counts.to_csv(outfile)
+        excl_indices = None
+    else:
+        excl_indices = pd.read_csv(args.file)
+    sample = get_subsample(args.Sessions, args.demos, n = n)
+    
+
     exit(0) 
 
 if __name__ == '__main__':
