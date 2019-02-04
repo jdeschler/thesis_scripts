@@ -168,11 +168,12 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
 
 def ei_classifier(eis, df, outcome):
     y_true = df[outcome].values
+    print(df.head())
     df['pred'] = 0
     for idx, row in df.iterrows():
         counts = {c: 0 for c in list(eis)}
         for c in list(eis):
-            domains = df[c]
+            domains = eis[c]
             for d in domains:
                 try:
                     if row[d] > 0:
@@ -247,23 +248,24 @@ def main():
     if not args.infile:
         eis = []
         ei_df = pd.DataFrame()
-        for i in range(1):
+        for i in range(20):
             sample = get_subsample(args.Sessions, args.demos, n=n)
             eis.append(calc_exclusivity_v2(sample, outcome, n = 100, outfile = None))
         for c in eis[0].keys():
             l = [a[c] for a in eis]
-            l = [a for b in eis for a in b]
+            l = [a for b in l for a in b]
             counts = dict(Counter(l))
             counts = sorted(counts.items(), key=lambda kv: kv[1])
             counts = [c for (c,_) in counts[:100]]
-            ei_df[c] = counts
-        ei_df.to_csv(out)
-        excl_indices = None
+            tmp_df = pd.DataFrame({c:counts})
+            ei_df = pd.concat([ei_df, tmp_df], axis=1)
+        ei_df = ei_df.fillna(value = '')
+        ei_df.to_csv(out, index = False)
+        excl_indices = ei_df
     else:
         excl_indices = pd.read_csv(args.infile)
     sample = get_subsample(args.Sessions, args.demos, n = n)
-    
-
+    ei_classifier(excl_indices, sample, outcome)
     exit(0) 
 
 if __name__ == '__main__':
