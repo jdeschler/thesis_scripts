@@ -174,8 +174,9 @@ def ei_classifier(eis, df, outcome):
         for c in list(eis):
             domains = df[c]
             for d in domains:
-                try if row[d] > 0:
-                    counts[c] += 1
+                try:
+                    if row[d] > 0:
+                        counts[c] += 1
                 except KeyError:
                     pass
         classify = max(counts.items(), key=operator.itemgetter(1))[0]
@@ -236,29 +237,30 @@ def main():
     parser.add_argument('Sessions', help='comScore Sessions file')
     parser.add_argument('demos', help='comScore demographics file')
     parser.add_argument('-o', '--outfile', help='slug for outfile for exclusivity indices')
-    parser.add_argument('-f' '--file', help='file to read in EIs')
-    parser.add_argumet('axis', help='axis to calculate on')
+    parser.add_argument('-f', '--infile', help='file to read in EIs')
+    parser.add_argument('axis', help='axis to calculate on')
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
-    outcome = arg.axis
-    out = 'exclusivity_indices' if not args.outfile else str(args.outfile)
+    outcome = args.axis
+    out = 'exclusivity_indices.csv' if not args.outfile else str(args.outfile)
     excl_indices = None
-    if not args.file:
+    if not args.infile:
         eis = []
         ei_df = pd.DataFrame()
         for i in range(1):
             sample = get_subsample(args.Sessions, args.demos, n=n)
-            eis.append(calc_exclusivity_v2(sample, axis, n = 100, outfile = None)
+            eis.append(calc_exclusivity_v2(sample, outcome, n = 100, outfile = None))
         for c in eis[0].keys():
-            l = [a for b[0] in eis for a in b]
+            l = [a[c] for a in eis]
+            l = [a for b in eis for a in b]
             counts = dict(Counter(l))
             counts = sorted(counts.items(), key=lambda kv: kv[1])
             counts = [c for (c,_) in counts[:100]]
             ei_df[c] = counts
-        counts.to_csv(outfile)
+        ei_df.to_csv(out)
         excl_indices = None
     else:
-        excl_indices = pd.read_csv(args.file)
+        excl_indices = pd.read_csv(args.infile)
     sample = get_subsample(args.Sessions, args.demos, n = n)
     
 
