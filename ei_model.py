@@ -136,7 +136,6 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     visits = {c: df[df[axis] == c].sum() for c in codes}
     lengths = {c: len(df[df[axis] == c]) for c in codes}
     lengths['total'] = len(df)
-    print(lengths)
     visits_df = pd.DataFrame({'domain': domains, 'visits': ph})
     for c in codes:
         visits_df[c] = ph
@@ -151,24 +150,17 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
             tot += tmp
         visits_df.at[idx, 'visits'] = tot
         counter += 1
-        if counter % 10000 == 0:
-            print('{}/{} domains processed'.format(counter, len(domains)))
-    print(type(tmp))
     # have visit fractions, must process them now
-    print('final processing on fractions')
     visits_df['tot'] = visits_df.drop(['visits','domain'], axis = 1).sum(axis = 1)
     for c in codes:
         visits_df[c] = visits_df[c] / visits_df['tot']
-    print(visits_df.head())
     if outfile:
-        print("HELLO")
         visits_df.to_csv(outfile, index = False)
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
 def ei_classifier(eis, df, outcome):
     y_true = df[outcome].values
-    print(df.head())
     df['pred'] = 0
     for idx, row in df.iterrows():
         counts = {c: 0 for c in list(eis)}
@@ -251,7 +243,10 @@ def main():
     if not args.infile:
         eis = []
         ei_df = pd.DataFrame()
-        for i in range(20):
+        for i in range(10):
+            sample = None
+            gc.collect()
+            print(i+1)
             sample = get_subsample(args.Sessions, args.demos, n=n)
             eis.append(calc_exclusivity_v2(sample, outcome, n = 100, outfile = None))
         for c in eis[0].keys():
@@ -267,6 +262,9 @@ def main():
         excl_indices = ei_df
     else:
         excl_indices = pd.read_csv(args.infile)
+    print("Getting testing subsample")
+    sample = None
+    gc.collect()
     sample = get_subsample(args.Sessions, args.demos, n = n)
     ei_classifier(excl_indices, sample, outcome)
     exit(0) 
