@@ -173,9 +173,14 @@ def ei_classifier(eis, df, outcome):
                         counts[c] += 1
                 except KeyError:
                     pass
+<<<<<<< HEAD
       
         if sum(list(counts.values()) == 0):
             counter += 1
+=======
+        if sum(list(counts.values())) == 0:
+            classify = -1
+>>>>>>> 77442f8481b8774e453e167847f15c8e7c24fab9
         else:
             classify = max(counts.items(), key=operator.itemgetter(1))[0]
         df.at[idx, 'pred'] = classify
