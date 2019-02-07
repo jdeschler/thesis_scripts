@@ -162,6 +162,7 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
 def ei_classifier(eis, df, outcome):
     y_true = df[outcome].values
     df['pred'] = 0
+    counter = 0
     for idx, row in df.iterrows():
         counts = {c: 0 for c in list(eis)}
         for c in list(eis):
@@ -172,12 +173,14 @@ def ei_classifier(eis, df, outcome):
                         counts[c] += 1
                 except KeyError:
                     pass
+      
         if sum(list(counts.values()) == 0):
-            classify = -1
+            counter += 1
         else:
             classify = max(counts.items(), key=operator.itemgetter(1))[0]
         df.at[idx, 'pred'] = classify
     y_hat = df['pred'].values
+    print("{} had none of the domains".format(counter))
     print("Overall accuracy: {}".format(classification_accuracy(y_true, y_hat)))
 
 ############################################################################
