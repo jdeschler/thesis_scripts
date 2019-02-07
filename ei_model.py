@@ -173,7 +173,7 @@ def ei_classifier(eis, df, outcome):
                         counts[c] += 1
                 except KeyError:
                     pass
-        if sum(list(counts.values()) == 0):
+        if sum(list(counts.values())) == 0:
             counter += 1
         else:
             classify = max(counts.items(), key=operator.itemgetter(1))[0]
