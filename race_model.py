@@ -47,6 +47,7 @@ def transform_mat(df):
 # adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
                   normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
+    classes = ['White', 'Nonwhite']
     cm = confusion_matrix(y_true, y_pred)
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -179,7 +180,7 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
 # TARGETS NOT CURRENTLY SET TO CENSUS
 def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
     # start with code for just one demographic axis
-    targets = [{1:.5, 2:.5, 3:0, 5:0}]
+    # targets = [{1:.25, 2:.25, 3:.25, 5:.25}]
     demo = demos[0]
     target = targets[0]
     keys = list(target.keys())
@@ -204,7 +205,7 @@ def get_subsample(sessions, demos, n = 20000):
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
     print("{} unique domains in sample".format(len(sample['domain_name'].unique())))
     df_final = transform_mat(sample)
-    
+    df_final['racial_background'] = df_final['racial_background'].apply(lambda x: 1 if x == 1 else 2) 
     # force memory garbage collection
     demos = None
     df_full = None
@@ -225,8 +226,8 @@ def main():
     args = parser.parse_args()
     n = 20000 if not args.n else args.n
     sample = get_subsample(args.Sessions, args.demos, n=n)
-    #fit_models(sample)
-    print(calc_exclusivity(sample, 'racial_background', n = 10))
+    fit_models(sample)
+    #print(calc_exclusivity(sample, 'racial_background', n = 10))
     exit(0) 
 
 if __name__ == '__main__':

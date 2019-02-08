@@ -128,7 +128,7 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
     final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
-def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.8):
+def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.9):
     codes = list(np.unique(df[axis].values))
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
     domains = list(domains)
@@ -175,8 +175,7 @@ def ei_classifier(eis, df, outcome):
                     pass
         if sum(list(counts.values())) == 0:
             counter += 1
-        else:
-            classify = max(counts.items(), key=operator.itemgetter(1))[0]
+        classify = max(counts.items(), key=operator.itemgetter(1))[0]
         df.at[idx, 'pred'] = classify
     y_hat = df['pred'].values
     print("{} had none of the domains".format(counter))
