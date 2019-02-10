@@ -71,35 +71,12 @@ def split_data(df, threshold = 0.8):
     return (data_train, data_test)
 
 def classification_accuracy(y_true, y_pred):
+    plot_conf_mat(y_true, y_pred)
     total_missed = 0
     for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
             total_missed += 1
     return 1 - (total_missed/len(y_true))
-
-def fit_log_model(df_train, df_test, response = 'democrat', demos = ['machine_id', 'hoh_most_education', 'census_region',
-                   'household_size', 'hoh_oldest_age', 'household_income',
-                   'children','connection_speed',
-                   'country_of_origin','zip_code','vf_k', 'vf_k_2p', 'D_pct', 'D_pct_2p']):
-    predictors = list(set(list(df_train)) - set([response] + demos))
-    # get test/train sets
-    y_train = df_train[response]
-    y_test = df_test[response]
-
-    x_train = df_train[predictors]
-    x_test = df_test[predictors]
-    
-    log_model = LogisticRegressionCV(cv = 5, max_iter = 10000)
-    
-    print("fitting log model")
-
-    log_model.fit(x_train, y_train)
-
-    print("MODEL SCORE:", log_model.score(x_test, y_test))
-
-    y_pred_test = log_model.predict(x_test)
-
-    return log_model
 
 def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',
@@ -116,6 +93,38 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
     print("Overall accuracy: {}".format(classification_accuracy(df_test['democrat'].values, y_hat)))
     conf_mat(df_test['democrat'].values, y_hat)
     return rf_model
+
+# create and print our confusion matrix!
+# adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
+def plot_conf_mat(y_true, y_pred, classes=['Democrat','Nondemocrat'],
+                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
+    cm = confusion_matrix(y_true, y_pred)
+    if normalize:
+        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        print("Normalized confusion matrix")
+    else:
+        print('Confusion matrix, without normalization')
+
+    print(cm)
+
+    plt.imshow(cm, interpolation='nearest', cmap=cmap)
+    plt.title(title)
+    plt.colorbar()
+    tick_marks = np.arange(len(classes))
+    plt.xticks(tick_marks, classes, rotation=45)
+    plt.yticks(tick_marks, classes)
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = cm.max() / 2.
+    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+        plt.text(j, i, format(cm[i, j], fmt),
+                 horizontalalignment="center",
+                 color="white" if cm[i, j] > thresh else "black")
+
+    plt.ylabel('True label')
+    plt.xlabel('Predicted label')
+    plt.savefig('confmat.png')
+
 
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
@@ -181,8 +190,8 @@ def get_subsample(sessions, demos, n = -1):
 
 def fit_models(df_final):
     train, test = split_data(df_final)
-    #log_model = fit_log_model(train, test)
     rf_model = fit_rf_model(train, test)
+    
     return {'rf': rf_model}
 
 def main():
