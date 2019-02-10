@@ -10,6 +10,9 @@ import pandas as pd
 import scipy as sp
 import gc
 import itertools
+import matplotlib
+matplotlib.use('TkAgg')
+import matplotlib.pyplot as plt
 #from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
