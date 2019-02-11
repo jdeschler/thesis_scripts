@@ -1,0 +1,56 @@
+D_pct .8
+fitting random forest model
+Confusion matrix, without normalization
+[[471   0]
+ [ 60   0]]
+Overall accuracy: 0.8870056497175142
+
+CONFUSION MATIX:
+       pred + pred -
+true +      0     60
+true -      0    471
+
+TRUE POSITIVE: 0
+TRUE NEGATIVE: 0.8870056497175142
+D_pct .5
+fitting random forest model
+Confusion matrix, without normalization
+[[400   3]
+ [113   5]]
+Overall accuracy: 0.7773512476007678
+
+CONFUSION MATIX:
+       pred + pred -
+true +      5    113
+true -      3    400
+
+TRUE POSITIVE: 0.625
+TRUE NEGATIVE: 0.7797270955165692
+D_pct_2p .8
+fitting random forest model
+Confusion matrix, without normalization
+[[403   3]
+ [105  12]]
+Overall accuracy: 0.7934990439770555
+
+CONFUSION MATIX:
+       pred + pred -
+true +     12    105
+true -      3    403
+
+TRUE POSITIVE: 0.8
+TRUE NEGATIVE: 0.7933070866141733
+D_pct_2p .5
+fitting random forest model
+Confusion matrix, without normalization
+[[232  46]
+ [ 69 153]]
+Overall accuracy: 0.77
+
+CONFUSION MATIX:
+       pred + pred -
+true +    153     69
+true -     46    232
+
+TRUE POSITIVE: 0.7688442211055276
+TRUE NEGATIVE: 0.770764119601329
