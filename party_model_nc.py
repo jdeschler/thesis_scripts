@@ -99,7 +99,7 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
 
 # create and print our confusion matrix!
 # adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
-def plot_conf_mat(y_true, y_pred, classes=['Democrat','Nondemocrat'],
+def plot_conf_mat(y_true, y_pred, classes=['Nondemocrat','Democrat'],
                   normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
     cm = confusion_matrix(y_true, y_pred)
     if normalize:
@@ -114,7 +114,7 @@ def plot_conf_mat(y_true, y_pred, classes=['Democrat','Nondemocrat'],
     plt.title(title)
     plt.colorbar()
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
+    plt.xticks(tick_marks, classes, rotation=20)
     plt.yticks(tick_marks, classes)
 
     fmt = '.2f' if normalize else 'd'
