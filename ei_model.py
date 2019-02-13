@@ -172,7 +172,7 @@ def ei_classifier(eis, df, outcome):
             for d in domains:
                 try:
                     if row[d] > 0:
-                        counts[c] += 1
+                        counts[c] += (101 - idx)
                 except KeyError:
                     pass
         if sum(list(counts.values())) == 0:
