@@ -128,7 +128,7 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
     final = {c: list(final_df[final_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
-def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.9):
+def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.7):
     codes = list(np.unique(df[axis].values))
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
     domains = list(domains)
@@ -163,6 +163,8 @@ def ei_classifier(eis, df, outcome):
     y_true = df[outcome].values
     df['pred'] = 0
     counter = 0
+    y_hat_classified = []
+    y_true_classified = []
     for idx, row in df.iterrows():
         counts = {c: 0 for c in list(eis)}
         for c in list(eis):
@@ -176,10 +178,14 @@ def ei_classifier(eis, df, outcome):
         if sum(list(counts.values())) == 0:
             counter += 1
         classify = max(counts.items(), key=operator.itemgetter(1))[0]
+        classify = int(classify)
         df.at[idx, 'pred'] = classify
+        if sum(list(counts.values())) > 0:
+            y_hat_classified += [classify]
+            y_true_classified += [df.at[idx, outcome]]
     y_hat = df['pred'].values
     print("{} had none of the domains".format(counter))
-    print("Overall accuracy: {}".format(classification_accuracy(y_true, y_hat)))
+    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified)))
 
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
