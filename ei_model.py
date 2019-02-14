@@ -55,8 +55,7 @@ def transform_mat_party(df):
                    'vf_k', 'vf_k_2p']]
     df_demos = df_demos.drop_duplicates('machine_id')
     # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
-         'tran_flg', 'hoh_most_education', 'census_region',
+    df = df.drop(['hoh_most_education', 'census_region',
          'household_size', 'hoh_oldest_age', 'household_income',
          'children', 'racial_background','connection_speed',
          'country_of_origin','zip_code'], axis = 1)
@@ -264,6 +263,7 @@ def get_subsample(sessions, demos, n = 20000):
 
 def classify_party(df, threshold = 0.8, two_party = True):
     comp_col = 'D_pct_2p' if two_party else 'D_pct'
+    threshold = float(threshold)
     df['democrat'] = df.apply(lambda row: 1 if row[comp_col] > threshold else 0, axis = 1)
     return df
 
@@ -274,15 +274,15 @@ def main():
     parser.add_argument('-o', '--outfile', help='slug for outfile for exclusivity indices')
     parser.add_argument('-f', '--infile', help='file to read in EIs')
     parser.add_argument('axis', help='axis to calculate on')
-    parser.add_argument('-m', '--modified', help='use modified criterion')
+    parser.add_argument('-m', '--modified', help='use modified criterion', action='store_true')
     parser.add_argument('-t', '--threshold', help='D_pct[_2p] threshold')
     parser.add_argument('-e', '--ei_threshold', help='EI sorting threshold')
     args = parser.parse_args()
     mod = False if not args.modified else True
-    ei_thresh = 0.8 if not args.ei_threshold else args.ei_threshold
+    ei_thresh = 0.8 if not args.ei_threshold else float(args.ei_threshold)
     n = 20000 if not args.n else args.n
     outcome = args.axis
-    threshold = 0.8 if not args.threshold else args.threshold
+    threshold = 0.8 if not args.threshold else float(args.threshold)
     out = 'exclusivity_indices.csv' if not args.outfile else str(args.outfile)
     excl_indices = None
     if args.axis == 'D_pct' or args.axis == 'D_pct_2p':
@@ -302,7 +302,7 @@ def main():
         tp = False
         if args.axis == 'D_pct_2p':
             tp = True
-        sample = classify_party(sample, threshold = threshold, two_party = tp)
+        sample = classify_party(df_final, threshold = threshold, two_party = tp)
         # split data and calculate EIs from training set
         train, sample = split_data(sample)
         excl_indices = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = ei_thresh)
