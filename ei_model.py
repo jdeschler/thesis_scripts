@@ -288,11 +288,11 @@ def main():
     if args.axis == 'D_pct' or args.axis == 'D_pct_2p':
         # no reading from a file of EIs for party
         # first get the demos and impute party
-        demos = pd.read_csv(demos)
+        demos = pd.read_csv(args.demos)
         subsample_numbers = demos_sample['machine_id']
 
         # read in the actual file and clean it here
-        df_full = pd.read_csv(sessions)
+        df_full = pd.read_csv(args.Sessions)
         sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
         df_final = transform_mat_party(sample)
         demos = None
