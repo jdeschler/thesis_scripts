@@ -159,7 +159,7 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
     return final
 
-def ei_classifier(eis, df, outcome):
+def ei_classifier(eis, df, outcome, mod = False):
     y_true = df[outcome].values
     df['pred'] = 0
     counter = 0
@@ -169,10 +169,11 @@ def ei_classifier(eis, df, outcome):
         counts = {c: 0 for c in list(eis)}
         for c in list(eis):
             domains = eis[c]
-            for d in domains:
+            for d in range(len(domains)):
+                domain = domains[d]
                 try:
-                    if row[d] > 0:
-                        counts[c] += (101 - idx)
+                    if row[domain] > 0:
+                        counts[c] += (101 - d) if mod else 1
                 except KeyError:
                     pass
         if sum(list(counts.values())) == 0:
@@ -242,7 +243,9 @@ def main():
     parser.add_argument('-o', '--outfile', help='slug for outfile for exclusivity indices')
     parser.add_argument('-f', '--infile', help='file to read in EIs')
     parser.add_argument('axis', help='axis to calculate on')
+    parser.add_argument('-m', '--modified', help='use modified criterion')
     args = parser.parse_args()
+    mod = False if not args.modified else True
     n = 20000 if not args.n else args.n
     outcome = args.axis
     out = 'exclusivity_indices.csv' if not args.outfile else str(args.outfile)
@@ -273,7 +276,7 @@ def main():
     sample = None
     gc.collect()
     sample = get_subsample(args.Sessions, args.demos, n = n)
-    ei_classifier(excl_indices, sample, outcome)
+    ei_classifier(excl_indices, sample, outcome, mod = mod)
     exit(0) 
 
 if __name__ == '__main__':
