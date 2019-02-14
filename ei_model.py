@@ -45,10 +45,34 @@ def transform_mat(df):
     final = df.merge(df_demos, on = 'machine_id')
     return final 
 
+
+def transform_mat_party(df):
+    # extract demographics, save separately for re-linking later
+    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
+                   'household_size', 'hoh_oldest_age', 'household_income',
+                   'children', 'racial_background','connection_speed',
+                   'country_of_origin','zip_code', 'D_pct','D_pct_2p',
+                   'vf_k', 'vf_k_2p', 'democrat']]
+    df_demos = df_demos.drop_duplicates('machine_id')
+    # drop columns we don't need, and demos, bc we already saved those
+    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
+         'tran_flg', 'hoh_most_education', 'census_region',
+         'household_size', 'hoh_oldest_age', 'household_income',
+         'children', 'racial_background','connection_speed',
+         'country_of_origin','zip_code'], axis = 1)
+    # use pivot to get the data in the format we want
+    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
+    df = pd.DataFrame(df.to_records())
+    df = df.fillna(0)
+    print("{} columns in the transformed matrix".format(len(list(df))))
+    # merge demographics back, and write final
+    final = df.merge(df_demos, on = 'machine_id')
+    return final
 # create and print our confusion matrix!
 # adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
-                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
+                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues,
+                  party = False):
     cm = confusion_matrix(y_true, y_pred)
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -57,7 +81,8 @@ def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
         print('Confusion matrix, without normalization')
 
     print(cm)
-
+    if party:
+        classes = ['Nondemocrat','Democrat']
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
@@ -157,6 +182,9 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     if outfile:
         visits_df.to_csv(outfile, index = False)
     final = {c: list(visits_df[visits_df[c] > threshold].sort_values(by=['visits'], ascending = False)['domain'])[:n] for c in codes}
+    if axis == 'democrat':
+        final_df = pd.DataFrame.from_dict(final)
+        final_df.to_csv('party_eis_{}.csv'.format(int(threshold*10)), index = False)
     return final
 
 def ei_classifier(eis, df, outcome, mod = False):
@@ -199,8 +227,6 @@ def ei_classifier(eis, df, outcome, mod = False):
 #    final dataframe subsample
 ############################################################################
 
-# TODO: is this an ok way? just picking n*w_k instead of how you would think by generating a random every time
-# TARGETS NOT CURRENTLY SET TO CENSUS
 def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
     # start with code for just one demographic axis
     targets = [{1:.5, 2:.35, 3:.1, 5:.05}]
@@ -236,6 +262,11 @@ def get_subsample(sessions, demos, n = 20000):
     gc.collect()
     return df_final
 
+def classify_party(df, threshold = 0.8, two_party = True):
+    comp_col = 'D_pct_2p' if two_party else 'D_pct'
+    df['democrat'] = df.apply(lambda row: 1 if row[comp_col] > threshold else 0, axis = 1)
+    return df
+
 def main():
     parser.add_argument('-n', type=int, help='size of subsample')
     parser.add_argument('Sessions', help='comScore Sessions file')
@@ -244,38 +275,65 @@ def main():
     parser.add_argument('-f', '--infile', help='file to read in EIs')
     parser.add_argument('axis', help='axis to calculate on')
     parser.add_argument('-m', '--modified', help='use modified criterion')
+    parser.add_argument('-t', '--threshold', help='D_pct[_2p] threshold')
+    parser.add_artument('-e', '--ei_threshold', help='EI sorting threshold')
     args = parser.parse_args()
     mod = False if not args.modified else True
+    ei_thresh = 0.8 if not args.ei_threshold else args.ei_threshold
     n = 20000 if not args.n else args.n
     outcome = args.axis
+    threshold = 0.8 if not args.threshold else args.threshold
     out = 'exclusivity_indices.csv' if not args.outfile else str(args.outfile)
     excl_indices = None
-    if not args.infile:
-        eis = []
-        ei_df = pd.DataFrame()
-        for i in range(10):
-            sample = None
-            gc.collect()
-            print(i+1)
-            sample = get_subsample(args.Sessions, args.demos, n=n)
-            eis.append(calc_exclusivity_v2(sample, outcome, n = 100, outfile = None))
-        for c in eis[0].keys():
-            l = [a[c] for a in eis]
-            l = [a for b in l for a in b]
-            counts = dict(Counter(l))
-            counts = sorted(counts.items(), key=lambda kv: kv[1])
-            counts = [c for (c,_) in counts[:100]]
-            tmp_df = pd.DataFrame({c:counts})
-            ei_df = pd.concat([ei_df, tmp_df], axis=1)
-        ei_df = ei_df.fillna(value = '')
-        ei_df.to_csv(out, index = False)
-        excl_indices = ei_df
+    if args.axis == 'D_pct' or args.axis == 'D_pct_2p':
+        # no reading from a file of EIs for party
+        # first get the demos and impute party
+        demos = pd.read_csv(demos)
+        subsample_numbers = demos_sample['machine_id']
+
+        # read in the actual file and clean it here
+        df_full = pd.read_csv(sessions)
+        sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
+        df_final = transform_mat_party(sample)
+        demos = None
+        df_full = None
+        sample = None
+        gc.collect()
+        tp = False
+        if args.axis == 'D_pct_2p':
+            tp = True
+        sample = classify_party(sample, threshold = threshold, two_party = tp)
+        # split data and calculate EIs from training set
+        train, sample = split_data(sample)
+        excl_indices = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = ei_thresh)
+        outcome = 'democrat'
     else:
-        excl_indices = pd.read_csv(args.infile)
-    print("Getting testing subsample")
-    sample = None
-    gc.collect()
-    sample = get_subsample(args.Sessions, args.demos, n = n)
+        if not args.infile:
+            eis = []
+            ei_df = pd.DataFrame()
+            for i in range(10):
+                sample = None
+                gc.collect()
+                print(i+1)
+                sample = get_subsample(args.Sessions, args.demos, n=n)
+                eis.append(calc_exclusivity_v2(sample, outcome, n = 100, outfile = None, threshold = ei_thresh))
+            for c in eis[0].keys():
+                l = [a[c] for a in eis]
+                l = [a for b in l for a in b]
+                counts = dict(Counter(l))
+                counts = sorted(counts.items(), key=lambda kv: kv[1])
+                counts = [c for (c,_) in counts[:100]]
+                tmp_df = pd.DataFrame({c:counts})
+                ei_df = pd.concat([ei_df, tmp_df], axis=1)
+            ei_df = ei_df.fillna(value = '')
+            ei_df.to_csv(out, index = False)
+            excl_indices = ei_df
+        else:
+            excl_indices = pd.read_csv(args.infile)
+        print("Getting testing subsample")
+        sample = None
+        gc.collect()
+        sample = get_subsample(args.Sessions, args.demos, n = n)
     ei_classifier(excl_indices, sample, outcome, mod = mod)
     exit(0) 
 
