@@ -52,7 +52,7 @@ def transform_mat_party(df):
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children', 'racial_background','connection_speed',
                    'country_of_origin','zip_code', 'D_pct','D_pct_2p',
-                   'vf_k', 'vf_k_2p', 'democrat']]
+                   'vf_k', 'vf_k_2p']]
     df_demos = df_demos.drop_duplicates('machine_id')
     # drop columns we don't need, and demos, bc we already saved those
     df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
