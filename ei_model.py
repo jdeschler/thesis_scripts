@@ -289,7 +289,7 @@ def main():
         # no reading from a file of EIs for party
         # first get the demos and impute party
         demos = pd.read_csv(args.demos)
-        subsample_numbers = demos_sample['machine_id']
+        subsample_numbers = demos['machine_id']
 
         # read in the actual file and clean it here
         df_full = pd.read_csv(args.Sessions)
