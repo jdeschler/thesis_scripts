@@ -276,7 +276,7 @@ def main():
     parser.add_argument('axis', help='axis to calculate on')
     parser.add_argument('-m', '--modified', help='use modified criterion')
     parser.add_argument('-t', '--threshold', help='D_pct[_2p] threshold')
-    parser.add_artument('-e', '--ei_threshold', help='EI sorting threshold')
+    parser.add_argument('-e', '--ei_threshold', help='EI sorting threshold')
     args = parser.parse_args()
     mod = False if not args.modified else True
     ei_thresh = 0.8 if not args.ei_threshold else args.ei_threshold
