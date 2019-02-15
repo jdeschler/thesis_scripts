@@ -213,7 +213,7 @@ def ei_classifier(eis, df, outcome, mod = False):
             y_true_classified += [df.at[idx, outcome]]
     y_hat = df['pred'].values
     party = False
-    if axis == 'democrat':
+    if outcome == 'democrat':
         party = True
     print("{} had none of the domains".format(counter))
     print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified, party = party)))
