@@ -52,7 +52,7 @@ def transform_mat_party(df):
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children', 'racial_background','connection_speed',
                    'country_of_origin','zip_code', 'D_pct','D_pct_2p',
-                   'vf_k', 'vf_k_2p', 'democrat']]
+                   'vf_k', 'vf_k_2p']]
     df_demos = df_demos.drop_duplicates('machine_id')
     # drop columns we don't need, and demos, bc we already saved those
     df = df.drop(['hoh_most_education', 'census_region',
@@ -155,6 +155,8 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
 def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.7):
     codes = list(np.unique(df[axis].values))
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
+    if axis == 'democrat':
+        domains = domains.difference(set(['vf_k', 'vf_k_2p', 'D_pct', 'D_pct_2p', 'democrat']))
     domains = list(domains)
     ph = [0.] * len(domains)
     visits = {c: df[df[axis] == c].sum() for c in codes}
