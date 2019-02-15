@@ -109,8 +109,8 @@ def split_data(df, threshold = 0.8):
     
     return (data_train, data_test)
 
-def classification_accuracy(y_true, y_pred):
-    plot_conf_mat(y_true, y_pred)
+def classification_accuracy(y_true, y_pred, party = False):
+    plot_conf_mat(y_true, y_pred, party = party)
     total_missed = 0
     for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
@@ -212,8 +212,11 @@ def ei_classifier(eis, df, outcome, mod = False):
             y_hat_classified += [classify]
             y_true_classified += [df.at[idx, outcome]]
     y_hat = df['pred'].values
+    party = False
+    if axis == 'democrat':
+        party = True
     print("{} had none of the domains".format(counter))
-    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified)))
+    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified, party = party)))
 
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
