@@ -192,9 +192,12 @@ def get_subsample(sessions, demos, n = -1):
 def fit_models(df_final):
     train, test = split_data(df_final)
     rf_model = fit_rf_model(train, test)
-    # write feature importances to an outfile
+    # write feature importances console, top 10
     impts = rf_model.feature_importances_
-    print(impts[1:10]) 
+    indices = np.argsort(impts)[::-1]
+    print("Top 10 Features")
+    for i in range(0,10):
+        print('{}. {}'.format(i+1, list(train)[indices[i]]))
     return {'rf': rf_model}
 
 def main():

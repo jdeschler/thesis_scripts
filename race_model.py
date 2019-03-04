@@ -129,6 +129,12 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
         
     y_hat = rf_model.predict(df_test[preds])
     print("Overall accuracy: {}".format(classification_accuracy(df_test['racial_background'].values, y_hat)))
+    # write feature importances console, top 10
+    impts = rf_model.feature_importances_
+    indices = np.argsort(impts)[::-1]
+    print("Top 10 Features")
+    for i in range(0,10):
+        print('{}. {}'.format(i+1, list(train)[indices[i]]))
     return rf_model
 
 ################# EXCLUSIVITY INDEX MODELING ###############################

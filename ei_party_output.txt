@@ -1,171 +1,171 @@
 D_pct > 0.8, t = 0.8
 125692 columns in the transformed matrix
-157 had none of the domains
+172 had none of the domains
 Confusion matrix, without normalization
-[[262  58]
- [ 17  35]]
-Overall accuracy (among classified): 0.7983870967741935
+[[259  57]
+ [ 17  26]]
+Overall accuracy (among classified): 0.7938718662952646
 D_pct > 0.8, t = 0.9
 125692 columns in the transformed matrix
-206 had none of the domains
+231 had none of the domains
 Confusion matrix, without normalization
-[[229  23]
- [ 21  40]]
-Overall accuracy (among classified): 0.8594249201277955
+[[231  28]
+ [ 22   3]]
+Overall accuracy (among classified): 0.823943661971831
 D_pct > 0.8, t = 0.7
 125692 columns in the transformed matrix
-1 had none of the domains
+104 had none of the domains
 Confusion matrix, without normalization
-[[279 182]
- [  9  36]]
-Overall accuracy (among classified): 0.6225296442687747
+[[301 101]
+ [ 11  28]]
+Overall accuracy (among classified): 0.746031746031746
 D_pct > 0.5, t = 0.8
-125692 columns in the transformed matrix
-129 had none of the domains
-Confusion matrix, without normalization
-[[193  65]
- [ 11  81]]
-Overall accuracy (among classified): 0.7828571428571429
-D_pct > 0.5, t = 0.9
-125692 columns in the transformed matrix
-185 had none of the domains
-Confusion matrix, without normalization
-[[172  38]
- [ 22  93]]
-Overall accuracy (among classified): 0.8153846153846154
-D_pct > 0.5, t = 0.7
-125692 columns in the transformed matrix
-2 had none of the domains
-Confusion matrix, without normalization
-[[208 195]
- [ 14 102]]
-Overall accuracy (among classified): 0.5973025048169557
-TWO PARTY
-D_pct_2p > 0.8, t = 0.8
-125692 columns in the transformed matrix
-171 had none of the domains
-Confusion matrix, without normalization
-[[208  48]
- [ 27 112]]
-Overall accuracy (among classified): 0.810126582278481
-D_pct_2p > 0.8, t = 0.9
-125692 columns in the transformed matrix
-179 had none of the domains
-Confusion matrix, without normalization
-[[145  24]
- [ 24 115]]
-Overall accuracy (among classified): 0.8441558441558441
-D_pct_2p > 0.8, t = 0.7
-125692 columns in the transformed matrix
-1 had none of the domains
-Confusion matrix, without normalization
-[[224 218]
- [ 14 108]]
-Overall accuracy (among classified): 0.5886524822695036
-D_pct_2p > 0.5, t = 0.8
-125692 columns in the transformed matrix
-103 had none of the domains
-Confusion matrix, without normalization
-[[107  51]
- [ 36 189]]
-Overall accuracy (among classified): 0.7728459530026109
-D_pct_2p > 0.5, t = 0.9
-125692 columns in the transformed matrix
-176 had none of the domains
-Confusion matrix, without normalization
-[[ 85  25]
- [ 32 198]]
-Overall accuracy (among classified): 0.8323529411764706
-D_pct_2p > 0.5, t = 0.7
-125692 columns in the transformed matrix
-4 had none of the domains
-Confusion matrix, without normalization
-[[113 174]
- [ 27 221]]
-Overall accuracy (among classified): 0.6242990654205607
-MODIFIED CRITERION
-D_pct > 0.8, t = 0.8
-125692 columns in the transformed matrix
-134 had none of the domains
-Confusion matrix, without normalization
-[[299  56]
- [ 14  45]]
-Overall accuracy (among classified): 0.8309178743961353
-D_pct > 0.8, t = 0.9
-125692 columns in the transformed matrix
-232 had none of the domains
-Confusion matrix, without normalization
-[[209  22]
- [  3  46]]
-Overall accuracy (among classified): 0.9107142857142857
-D_pct > 0.8, t = 0.7
-125692 columns in the transformed matrix
-0 had none of the domains
-Confusion matrix, without normalization
-[[219 230]
- [ 14  43]]
-Overall accuracy (among classified): 0.5177865612648221
-D_pct > 0.5, t = 0.8
-125692 columns in the transformed matrix
-155 had none of the domains
-Confusion matrix, without normalization
-[[192  75]
- [ 14  94]]
-Overall accuracy (among classified): 0.7626666666666666
-D_pct > 0.5, t = 0.9
-125692 columns in the transformed matrix
-192 had none of the domains
-Confusion matrix, without normalization
-[[144  37]
- [  5 113]]
-Overall accuracy (among classified): 0.8595317725752508
-D_pct > 0.5, t = 0.7
-125692 columns in the transformed matrix
-1 had none of the domains
-Confusion matrix, without normalization
-[[133 254]
- [  9 105]]
-Overall accuracy (among classified): 0.4750499001996008
-TWO PARTY
-D_pct_2p > 0.8, t = 0.8
-125692 columns in the transformed matrix
-146 had none of the domains
-Confusion matrix, without normalization
-[[143  61]
- [ 10 137]]
-Overall accuracy (among classified): 0.7977207977207977
-D_pct_2p > 0.8, t = 0.9
 125692 columns in the transformed matrix
 198 had none of the domains
 Confusion matrix, without normalization
-[[138  44]
- [  4 123]]
-Overall accuracy (among classified): 0.8446601941747574
+[[182  48]
+ [ 30  58]]
+Overall accuracy (among classified): 0.7547169811320755
+D_pct > 0.5, t = 0.9
+125692 columns in the transformed matrix
+274 had none of the domains
+Confusion matrix, without normalization
+[[145  32]
+ [ 23  37]]
+Overall accuracy (among classified): 0.7679324894514767
+D_pct > 0.5, t = 0.7
+125692 columns in the transformed matrix
+96 had none of the domains
+Confusion matrix, without normalization
+[[222  98]
+ [ 20  73]]
+Overall accuracy (among classified): 0.7142857142857143
+TWO PARTY
+D_pct_2p > 0.8, t = 0.8
+125692 columns in the transformed matrix
+192 had none of the domains
+Confusion matrix, without normalization
+[[172  53]
+ [ 34  60]]
+Overall accuracy (among classified): 0.7272727272727273
+D_pct_2p > 0.8, t = 0.9
+125692 columns in the transformed matrix
+257 had none of the domains
+Confusion matrix, without normalization
+[[172  47]
+ [ 28  45]]
+Overall accuracy (among classified): 0.7431506849315068
 D_pct_2p > 0.8, t = 0.7
 125692 columns in the transformed matrix
-1 had none of the domains
+100 had none of the domains
 Confusion matrix, without normalization
-[[136 251]
- [  6 119]]
-Overall accuracy (among classified): 0.498046875
+[[187  96]
+ [ 29  69]]
+Overall accuracy (among classified): 0.6719160104986877
 D_pct_2p > 0.5, t = 0.8
 125692 columns in the transformed matrix
-121 had none of the domains
+201 had none of the domains
 Confusion matrix, without normalization
-[[ 97  45]
- [ 11 228]]
-Overall accuracy (among classified): 0.8530183727034121
+[[129  55]
+ [ 48  90]]
+Overall accuracy (among classified): 0.6801242236024845
 D_pct_2p > 0.5, t = 0.9
 125692 columns in the transformed matrix
-155 had none of the domains
+285 had none of the domains
 Confusion matrix, without normalization
-[[ 83  40]
- [ 12 212]]
-Overall accuracy (among classified): 0.8501440922190202
+[[74 23]
+ [38 45]]
+Overall accuracy (among classified): 0.6611111111111111
 D_pct_2p > 0.5, t = 0.7
 125692 columns in the transformed matrix
-3 had none of the domains
+150 had none of the domains
 Confusion matrix, without normalization
-[[ 88 181]
- [ 26 231]]
-Overall accuracy (among classified): 0.6064638783269962
+[[133  53]
+ [ 69 106]]
+Overall accuracy (among classified): 0.6620498614958449
+MODIFIED CRITERION
+D_pct > 0.8, t = 0.8
+125692 columns in the transformed matrix
+162 had none of the domains
+Confusion matrix, without normalization
+[[257  86]
+ [ 25  20]]
+Overall accuracy (among classified): 0.7139175257731959
+D_pct > 0.8, t = 0.9
+125692 columns in the transformed matrix
+210 had none of the domains
+Confusion matrix, without normalization
+[[220  27]
+ [ 23  10]]
+Overall accuracy (among classified): 0.8214285714285714
+D_pct > 0.8, t = 0.7
+125692 columns in the transformed matrix
+82 had none of the domains
+Confusion matrix, without normalization
+[[267 107]
+ [ 17  19]]
+Overall accuracy (among classified): 0.697560975609756
+D_pct > 0.5, t = 0.8
+125692 columns in the transformed matrix
+176 had none of the domains
+Confusion matrix, without normalization
+[[187  72]
+ [ 20  58]]
+Overall accuracy (among classified): 0.7270029673590505
+D_pct > 0.5, t = 0.9
+125692 columns in the transformed matrix
+285 had none of the domains
+Confusion matrix, without normalization
+[[137  32]
+ [ 15  33]]
+Overall accuracy (among classified): 0.7834101382488479
+D_pct > 0.5, t = 0.7
+125692 columns in the transformed matrix
+105 had none of the domains
+Confusion matrix, without normalization
+[[201 103]
+ [ 22  61]]
+Overall accuracy (among classified): 0.6770025839793281
+TWO PARTY
+D_pct_2p > 0.8, t = 0.8
+125692 columns in the transformed matrix
+219 had none of the domains
+Confusion matrix, without normalization
+[[175  60]
+ [ 23  75]]
+Overall accuracy (among classified): 0.7507507507507507
+D_pct_2p > 0.8, t = 0.9
+125692 columns in the transformed matrix
+276 had none of the domains
+Confusion matrix, without normalization
+[[135  31]
+ [ 23  54]]
+Overall accuracy (among classified): 0.7777777777777778
+D_pct_2p > 0.8, t = 0.7
+125692 columns in the transformed matrix
+116 had none of the domains
+Confusion matrix, without normalization
+[[222  88]
+ [ 22  91]]
+Overall accuracy (among classified): 0.739952718676123
+D_pct_2p > 0.5, t = 0.8
+125692 columns in the transformed matrix
+225 had none of the domains
+Confusion matrix, without normalization
+[[106  42]
+ [ 38  94]]
+Overall accuracy (among classified): 0.7142857142857143
+D_pct_2p > 0.5, t = 0.9
+125692 columns in the transformed matrix
+285 had none of the domains
+Confusion matrix, without normalization
+[[79 40]
+ [39 58]]
+Overall accuracy (among classified): 0.6342592592592593
+D_pct_2p > 0.5, t = 0.7
+125692 columns in the transformed matrix
+137 had none of the domains
+Confusion matrix, without normalization
+[[133  79]
+ [ 61 133]]
+Overall accuracy (among classified): 0.6551724137931034
