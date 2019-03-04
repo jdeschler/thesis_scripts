@@ -1,7 +1,7 @@
 ###############################################
 # Jack Deschler, Senior Thesis
 #   code to fit models on comScore data
-#   in order to predict race from browser history
+#   in order to predict partisanship from browsing history
 #################################################
 
 import argparse
@@ -140,8 +140,6 @@ def plot_conf_mat(y_true, y_pred, classes=['Nondemocrat','Democrat'],
 #    final dataframe subsample
 ############################################################################
 
-# TODO: is this an ok way? just picking n*w_k instead of how you would think by generating a random every time
-
 def subsample(n, df, demos = ['racial_background'], targets = [{1: .766, 2: .134, 3: .058, 5: .042}]):
     # start with code for just one demographic axis
     demo = demos[0]
@@ -194,7 +192,9 @@ def get_subsample(sessions, demos, n = -1):
 def fit_models(df_final):
     train, test = split_data(df_final)
     rf_model = fit_rf_model(train, test)
-    
+    # write feature importances to an outfile
+    impts = rf_model.feature_importances_
+    print(impts[1:10]) 
     return {'rf': rf_model}
 
 def main():
