@@ -134,7 +134,7 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
     indices = np.argsort(impts)[::-1]
     print("Top 10 Features")
     for i in range(0,10):
-        print('{}. {}'.format(i+1, list(train)[indices[i]]))
+        print('{}. {}'.format(i+1, preds[indices[i]]))
     return rf_model
 
 ################# EXCLUSIVITY INDEX MODELING ###############################

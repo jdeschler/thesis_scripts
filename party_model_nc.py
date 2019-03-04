@@ -84,7 +84,7 @@ def classification_accuracy(y_true, y_pred):
 def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children','connection_speed',
-                   'country_of_origin','zip_code', 'vf_k', 'vf_k_2p', 'D_pct', 'D_pct_2p'], response = 'democrat', n_estimators = 256, max_depth = 48):
+                   'country_of_origin', 'racial_background', 'zip_code', 'vf_k', 'vf_k_2p', 'D_pct', 'D_pct_2p'], response = 'democrat', n_estimators = 256, max_depth = 48):
     
     rf_model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth)
     print("fitting random forest model")
@@ -198,12 +198,6 @@ def get_subsample(sessions, demos, n = -1):
 def fit_models(df_final):
     train, test = split_data(df_final)
     rf_model = fit_rf_model(train, test)
-    # write feature importances console, top 10
-    impts = rf_model.feature_importances_
-    indices = np.argsort(impts)[::-1]
-    print("Top 10 Features")
-    for i in range(0,10):
-        print('{}. {}'.format(i+1, list(train)[indices[i]]))
     return {'rf': rf_model}
 
 def main():
