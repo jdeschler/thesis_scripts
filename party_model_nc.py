@@ -89,7 +89,6 @@ def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education',
     rf_model = RandomForestClassifier(n_estimators = n_estimators, max_depth = max_depth)
     print("fitting random forest model")
     preds = list(set(list(df_train)) - set([response] + demos))
-    
     rf_model.fit(df_train[preds], df_train[response])
         
     y_hat = rf_model.predict(df_test[preds])
