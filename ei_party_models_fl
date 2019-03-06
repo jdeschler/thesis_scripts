@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+
+echo "D_pct > 0.8, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.8
+mv confmat.png ei_confmat/party/fl/confmat_D8_e8.png
+echo "D_pct > 0.8, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.9
+mv confmat.png ei_confmat/party/fl/confmat_D8_e9.png
+echo "D_pct > 0.8, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.7
+mv confmat.png ei_confmat/party/fl/confmat_D8_e7.png
+echo "D_pct > 0.5, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.8
+mv confmat.png ei_confmat/party/fl/confmat_D5_e8.png
+echo "D_pct > 0.5, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.9
+mv confmat.png ei_confmat/party/fl/confmat_D5_e9.png
+echo "D_pct > 0.5, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.7
+mv confmat.png ei_confmat/party/fl/confmat_D5_e7.png
+echo "TWO PARTY"
+echo "D_pct_2p > 0.8, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.8
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e8.png
+echo "D_pct_2p > 0.8, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.9
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e9.png
+echo "D_pct_2p > 0.8, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.7
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e7.png
+echo "D_pct_2p > 0.5, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.8
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e8.png
+echo "D_pct_2p > 0.5, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.9
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e9.png
+echo "D_pct_2p > 0.5, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.7
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e7.png
+
+echo "MODIFIED CRITERION"
+echo "D_pct > 0.8, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.8 -m
+mv confmat.png ei_confmat/party/fl/confmat_D8_e8_mod.png
+echo "D_pct > 0.8, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.9 -m
+mv confmat.png ei_confmat/party/fl/confmat_D8_e9_mod.png
+echo "D_pct > 0.8, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.8 -e 0.7 -m
+mv confmat.png ei_confmat/party/fl/confmat_D8_e7_mod.png
+echo "D_pct > 0.5, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.8 -m
+mv confmat.png ei_confmat/party/fl/confmat_D5_e8_mod.png
+echo "D_pct > 0.5, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.9 -m
+mv confmat.png ei_confmat/party/fl/confmat_D5_e9_mod.png
+echo "D_pct > 0.5, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct -t 0.5 -e 0.7 -m
+mv confmat.png ei_confmat/party/fl/confmat_D5_e7_mod.png
+echo "TWO PARTY"
+echo "D_pct_2p > 0.8, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.8 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e8_mod.png
+echo "D_pct_2p > 0.8, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.9 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e9_mod.png
+echo "D_pct_2p > 0.8, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.8 -e 0.7 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp8_e7_mod.png
+echo "D_pct_2p > 0.5, t = 0.8"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.8 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e8_mod.png
+echo "D_pct_2p > 0.5, t = 0.9"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.9 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e9_mod.png
+echo "D_pct_2p > 0.5, t = 0.7"
+python ei_model.py ../fl16_Sessions.csv ../demos/fl16_demos.csv D_pct_2p -t 0.5 -e 0.7 -m
+mv confmat.png ei_confmat/party/fl/confmat_Dtp5_e7_mod.png
