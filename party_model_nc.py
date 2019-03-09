@@ -22,6 +22,7 @@ parser = argparse.ArgumentParser()
 # from cleaning.py, fwiw this is the clunky version
 def transform_mat(df):
     # extract demographics, save separately for re-linking later
+    print(list(df))
     df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children', 'racial_background','connection_speed',
