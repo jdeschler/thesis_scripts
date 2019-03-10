@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+echo "D_pct .8"
+python party_model_rf.py ../nc16_Sessions.csv ../demos/nc16_demos.csv -l .8
+mv confmat.png party_confmat/random_forest/nc/confmat_8.png
+echo "D_pct .5"
+python party_model_rf.py ../nc16_Sessions.csv ../demos/nc16_demos.csv -l .5
+mv confmat.png party_confmat/random_forest/nc/confmat_5.png
+echo "D_pct_2p .8"
+python party_model_rf.py ../nc16_Sessions.csv ../demos/nc16_demos.csv -l .8 -tp
+mv confmat.png party_confmat/random_forest/nc/confmat_tp8.png
+echo "D_pct_2p .5"
+python party_model_rf.py ../nc16_Sessions.csv ../demos/nc16_demos.csv -l .5 -tp
+mv confmat.png party_confmat/random_forest/nc/confmat_tp5.png
