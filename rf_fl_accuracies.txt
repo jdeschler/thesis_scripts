@@ -1,0 +1,104 @@
+D_pct .8
+['machine_id', 'pages_viewed', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code', 'domain_name', 'State', 'D_pct', 'D_pct_2p', 'vf_k', 'vf_k_2p']
+fitting random forest model
+Confusion matrix, without normalization
+[[1125    0]
+ [  78    0]]
+Overall accuracy: 0.9351620947630923
+
+CONFUSION MATIX:
+       pred + pred -
+true +      0     78
+true -      0   1125
+
+TRUE POSITIVE: 0
+TRUE NEGATIVE: 0.9351620947630923
+Top 10 Features
+1. datpiff.com
+2. find.ly
+3. fmuniv.edu
+4. getintopc.com
+5. tdjakes.org
+6. free-desktop-games.com
+7. brownbunnies.com
+8. livemixtapes.com
+9. e-baptisthealth.com
+10. footlocker.com
+D_pct .5
+['machine_id', 'pages_viewed', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code', 'domain_name', 'State', 'D_pct', 'D_pct_2p', 'vf_k', 'vf_k_2p']
+fitting random forest model
+Confusion matrix, without normalization
+[[1026    2]
+ [ 181    2]]
+Overall accuracy: 0.8488852188274154
+
+CONFUSION MATIX:
+       pred + pred -
+true +      2    181
+true -      2   1026
+
+TRUE POSITIVE: 0.5
+TRUE NEGATIVE: 0.8500414250207126
+Top 10 Features
+1. footlocker.com
+2. brassring.com
+3. worldstarhiphop.com
+4. indeed.com
+5. taleo.net
+6. datpiff.com
+7. brownbunnies.com
+8. icims.com
+9. amazon.com
+10. google.com
+D_pct_2p .8
+['machine_id', 'pages_viewed', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code', 'domain_name', 'State', 'D_pct', 'D_pct_2p', 'vf_k', 'vf_k_2p']
+fitting random forest model
+Confusion matrix, without normalization
+[[995   0]
+ [223   0]]
+Overall accuracy: 0.8169129720853858
+
+CONFUSION MATIX:
+       pred + pred -
+true +      0    223
+true -      0    995
+
+TRUE POSITIVE: 0
+TRUE NEGATIVE: 0.8169129720853858
+Top 10 Features
+1. worldstarhiphop.com
+2. datpiff.com
+3. footlocker.com
+4. amazon.com
+5. indeed.com
+6. google.com
+7. jobhat.com
+8. soundcloud.com
+9. weather.com
+10. ebay.com
+D_pct_2p .5
+['machine_id', 'pages_viewed', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code', 'domain_name', 'State', 'D_pct', 'D_pct_2p', 'vf_k', 'vf_k_2p']
+fitting random forest model
+Confusion matrix, without normalization
+[[241 295]
+ [123 501]]
+Overall accuracy: 0.6396551724137931
+
+CONFUSION MATIX:
+       pred + pred -
+true +    501    123
+true -    295    241
+
+TRUE POSITIVE: 0.6293969849246231
+TRUE NEGATIVE: 0.6620879120879121
+Top 10 Features
+1. mapquest.com
+2. dadeschools.net
+3. broward.org
+4. browardschools.com
+5. lowes.com
+6. broward.edu
+7. miamidade.gov
+8. yahoo.com
+9. legacy.com
+10. weather.com
