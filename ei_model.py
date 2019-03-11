@@ -99,7 +99,8 @@ def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig('confmat.png')
-
+    plt.clf()
+    
 # Helper functions from CS109a final
 def split_data(df, threshold = 0.8):
     msk = np.random.rand(len(df)) < threshold
