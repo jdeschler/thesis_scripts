@@ -38,12 +38,18 @@ def main():
     demos2 = pd.read_csv('../demos/' + state2 + '16_demos.csv') 
     sessions1 = pd.read_csv('../' + state1 + '16_Sessions.csv')
     sessions2 = pd.read_csv('../' + state2 + '16_Sessions.csv')
-    sessions = pd.concat(session1, session2)
+    sessions = pd.concat([sessions1, sessions2], sort = False)
     sessions1 = None
     sessions2 = None
     gc.collect()
-    sessions = transform_mat(sessions)
-    sessions = classify_party(sessions, threshold = 0.5, tp = True)
+    # add cols so transform_mat doesn't break
+    sessions['site_session_id'] = 0
+    sessions['domain_id'] = 0
+    sessions['ref_domain_name'] = 0
+    sessions['duration'] = 0
+    sessions['tran_flg'] = 0
+    sessions = transform_mat_party(sessions)
+    sessions = classify_party(sessions, threshold = 0.5, two_party = True)
 
     # State 1 on State 2
     print(state1 + ' on ' + state2)
@@ -77,7 +83,7 @@ def main():
     
     # Combined Model
     print("Combined Model")
-    train, test = split_data(sample)
+    train, test = split_data(sessions)
     eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = 'combined_ei.csv', threshold = 0.9)
     print("EI original criterion")
     ei_classifier(eis, test, 'democrat', mod = False)

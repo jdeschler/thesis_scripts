@@ -1,0 +1,117 @@
+225151 columns in the transformed matrix
+nc on fl
+EI original criterion
+3862 had none of the domains
+Confusion matrix, without normalization
+[[802 261]
+ [532 556]]
+Overall accuracy (among classified): 0.6313342631334263
+EI modified criterion
+3862 had none of the domains
+Confusion matrix, without normalization
+[[764 299]
+ [474 614]]
+Overall accuracy (among classified): 0.6406322640632265
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[2285  517]
+ [1889 1322]]
+Overall accuracy: 0.5998669549309829
+
+CONFUSION MATIX:
+       pred + pred -
+true +   1322   1889
+true -    517   2285
+
+TRUE POSITIVE: 0.7188689505165851
+TRUE NEGATIVE: 0.5474365117393387
+Top 10 Features
+1. brassring.com
+2. ncdot.gov
+3. soundcloud.com
+4. lowes.com
+5. tractorsupply.com
+6. taleo.net
+7. worldstarhiphop.com
+8. jobs2careers.com
+9. homedepot.com
+10. pinterest.com
+
+fl on nc
+EI original criterion
+1972 had none of the domains
+Confusion matrix, without normalization
+[[248  82]
+ [106 153]]
+Overall accuracy (among classified): 0.6808149405772496
+EI modified criterion
+1972 had none of the domains
+Confusion matrix, without normalization
+[[246  84]
+ [ 98 161]]
+Overall accuracy (among classified): 0.6910016977928692
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[624 740]
+ [237 960]]
+Overall accuracy: 0.6185083951581414
+
+CONFUSION MATIX:
+       pred + pred -
+true +    960    237
+true -    740    624
+
+TRUE POSITIVE: 0.5647058823529412
+TRUE NEGATIVE: 0.7247386759581882
+Top 10 Features
+1. browardschools.com
+2. lowes.com
+3. broward.org
+4. broward.edu
+5. dadeschools.net
+6. beallsflorida.com
+7. legacy.com
+8. federate365.com
+9. miamidade.gov
+10. accuweather.com
+
+Combined Model
+EI original criterion
+1233 had none of the domains
+Confusion matrix, without normalization
+[[149  51]
+ [ 77 195]]
+Overall accuracy (among classified): 0.728813559322034
+EI modified criterion
+1233 had none of the domains
+Confusion matrix, without normalization
+[[145  55]
+ [ 70 202]]
+Overall accuracy (among classified): 0.7351694915254237
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[419 418]
+ [187 681]]
+Overall accuracy: 0.6451612903225806
+
+CONFUSION MATIX:
+       pred + pred -
+true +    681    187
+true -    418    419
+
+TRUE POSITIVE: 0.6196542311191993
+TRUE NEGATIVE: 0.6914191419141914
+Top 10 Features
+1. browardschools.com
+2. brassring.com
+3. broward.org
+4. lowes.com
+5. weather.com
+6. legacy.com
+7. worldstarhiphop.com
+8. foxnews.com
+9. taleo.net
+10. verizonwireless.com
