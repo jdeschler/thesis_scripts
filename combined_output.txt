@@ -1,117 +1,117 @@
 225151 columns in the transformed matrix
 nc on fl
 EI original criterion
-3873 had none of the domains
+3863 had none of the domains
 Confusion matrix, without normalization
-[[798 259]
- [525 558]]
-Overall accuracy (among classified): 0.6336448598130842
+[[799 261]
+ [532 558]]
+Overall accuracy (among classified): 0.6311627906976744
 EI modified criterion
-3873 had none of the domains
+3863 had none of the domains
 Confusion matrix, without normalization
-[[755 302]
- [470 613]]
-Overall accuracy (among classified): 0.6392523364485981
+[[763 297]
+ [477 613]]
+Overall accuracy (among classified): 0.64
 RF Model
 fitting random forest model
 Confusion matrix, without normalization
-[[2283  519]
- [1920 1291]]
-Overall accuracy: 0.5943788458340262
+[[2328  474]
+ [1985 1226]]
+Overall accuracy: 0.591052719108598
 
 CONFUSION MATIX:
        pred + pred -
-true +   1291   1920
-true -    519   2283
+true +   1226   1985
+true -    474   2328
 
-TRUE POSITIVE: 0.7132596685082873
-TRUE NEGATIVE: 0.5431834403997144
+TRUE POSITIVE: 0.7211764705882353
+TRUE NEGATIVE: 0.5397635056805008
 Top 10 Features
-1. worldstarhiphop.com
-2. brassring.com
-3. snagajob.com
-4. soundcloud.com
-5. homedepot.com
-6. ncdot.gov
-7. foxnews.com
-8. pinterest.com
-9. lowes.com
-10. uber.com
+1. brassring.com
+2. worldstarhiphop.com
+3. weather.com
+4. netu.tv
+5. snagajob.com
+6. tractorsupply.com
+7. nps.gov
+8. 123movies.is
+9. ncdot.gov
+10. lowes.com
 
 fl on nc
 EI original criterion
-1967 had none of the domains
+1970 had none of the domains
 Confusion matrix, without normalization
-[[249  81]
- [112 152]]
-Overall accuracy (among classified): 0.6750841750841751
+[[246  83]
+ [113 149]]
+Overall accuracy (among classified): 0.6683587140439933
 EI modified criterion
-1967 had none of the domains
+1970 had none of the domains
 Confusion matrix, without normalization
-[[245  85]
- [103 161]]
-Overall accuracy (among classified): 0.6835016835016835
+[[243  86]
+ [102 160]]
+Overall accuracy (among classified): 0.6818950930626058
 RF Model
 fitting random forest model
 Confusion matrix, without normalization
-[[635 729]
- [236 961]]
-Overall accuracy: 0.6231940648184303
+[[649 715]
+ [239 958]]
+Overall accuracy: 0.6274892620070285
 
 CONFUSION MATIX:
        pred + pred -
-true +    961    236
-true -    729    635
+true +    958    239
+true -    715    649
 
-TRUE POSITIVE: 0.5686390532544379
-TRUE NEGATIVE: 0.7290470723306545
+TRUE POSITIVE: 0.5726240286909743
+TRUE NEGATIVE: 0.7308558558558559
 Top 10 Features
-1. broward.org
-2. browardschools.com
-3. lowes.com
-4. broward.edu
-5. dadeschools.net
-6. federate365.com
+1. browardschools.com
+2. lowes.com
+3. broward.org
+4. dadeschools.net
+5. legacy.com
+6. broward.edu
 7. weather.com
-8. brassring.com
-9. mapquest.com
+8. federate365.com
+9. verizonwireless.com
 10. beallsflorida.com
 
 Combined Model
 EI original criterion
-1236 had none of the domains
+1285 had none of the domains
 Confusion matrix, without normalization
-[[164  69]
- [ 70 192]]
-Overall accuracy (among classified): 0.7191919191919192
+[[149  63]
+ [ 51 182]]
+Overall accuracy (among classified): 0.7438202247191011
 EI modified criterion
-1236 had none of the domains
+1285 had none of the domains
 Confusion matrix, without normalization
-[[160  73]
- [ 66 196]]
-Overall accuracy (among classified): 0.7191919191919192
+[[144  68]
+ [ 46 187]]
+Overall accuracy (among classified): 0.7438202247191011
 RF Model
 fitting random forest model
 Confusion matrix, without normalization
-[[419 452]
- [183 677]]
-Overall accuracy: 0.6331600231080301
+[[438 404]
+ [160 728]]
+Overall accuracy: 0.6739884393063584
 
 CONFUSION MATIX:
        pred + pred -
-true +    677    183
-true -    452    419
+true +    728    160
+true -    404    438
 
-TRUE POSITIVE: 0.5996457041629761
-TRUE NEGATIVE: 0.6960132890365448
+TRUE POSITIVE: 0.6431095406360424
+TRUE NEGATIVE: 0.7324414715719063
 Top 10 Features
-1. browardschools.com
-2. broward.org
+1. broward.org
+2. browardschools.com
 3. lowes.com
-4. dadeschools.net
-5. legacy.com
-6. broward.edu
-7. brassring.com
-8. verizonwireless.com
-9. worldstarhiphop.com
-10. foxnews.com
+4. brassring.com
+5. weather.com
+6. dadeschools.net
+7. broward.edu
+8. foxnews.com
+9. ncdot.gov
+10. i-ready.com

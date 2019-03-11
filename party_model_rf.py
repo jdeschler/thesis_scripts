@@ -133,7 +133,7 @@ def plot_conf_mat(y_true, y_pred, classes=['Nondemocrat','Democrat'],
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig('confmat.png')
-
+    plt.clf()
 
 ############################################################################
 # subsample: returns a subsample of a dataframe weighted by certain targets
