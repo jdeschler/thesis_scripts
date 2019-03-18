@@ -8,17 +8,16 @@ def process_data(csv):
     token = csv[:-4]
     cols = ['machine_id', 'domain_name', 'pages_viewed']
     df = pd.read_csv(csv, usecols=cols, encoding = "ISO-8859-1")
-    # for row in df
-    #  if domain_name in the df already
     machines = df['machine_id'].unique()
     res = pd.DataFrame(index=machines)
-    #res.rename({0: 'machine_id'}, axis = 'columns')
+    # process data frame row by row instead of all at once
+    # saves memory at the cost of speed
     for m in machines:
         df_m = df.loc[df['machine_id'] == m]
         for _index, row in df_m.iterrows():
             site = row['domain_name']
             if site not in list(res):
-                # add the column
+                # add the column if necessary
                 res[site] = 0
             # now add to the cell
             res.at[m, site] += row['pages_viewed']

@@ -1,8 +1,12 @@
 #############
 # Jack Deschler, Senior Thesis
 #  cross state modeling code
+#  fits random forest and exclusivity index models
+#  between two states, and combined between states
+#  works with any two slugs as long as:
+#   demos csv path is in form ../demos/X_demos.csv
+#   sessions csv path is in form ../X_Sessions.csv
 ############
-
 import argparse
 import os
 import numpy as np
@@ -13,14 +17,22 @@ import itertools
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-#from joblib import dump, load
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from party_model_rf import fit_rf_model
 from ei_model import *
+from helper_functions import *
 parser = argparse.ArgumentParser()
 
+# split_by_state(demos1, demos2, df)
+# IN:
+#   demos1: demographic list for the training set
+#   demos2: demographic list for the testing set
+#   df: combined transformed comscore sessions data frame
+# RETURN:
+#   train: training dataset, pertaining to demos1
+#   test: testing dataset, pertaining to demos2
 def split_by_state(demos1, demos2, df):
     train_machines = demos1['machine_id']
     test_machines = demos2['machine_id']
@@ -34,10 +46,10 @@ def main():
     args = parser.parse_args()
     state1 = args.state1
     state2 = args.state2
-    demos1 = pd.read_csv('../demos/' + state1 + '16_demos.csv')
-    demos2 = pd.read_csv('../demos/' + state2 + '16_demos.csv') 
-    sessions1 = pd.read_csv('../' + state1 + '16_Sessions.csv')
-    sessions2 = pd.read_csv('../' + state2 + '16_Sessions.csv')
+    demos1 = pd.read_csv('../demos/' + state1 + '_demos.csv')
+    demos2 = pd.read_csv('../demos/' + state2 + '_demos.csv') 
+    sessions1 = pd.read_csv('../' + state1 + '_Sessions.csv')
+    sessions2 = pd.read_csv('../' + state2 + '_Sessions.csv')
     sessions = pd.concat([sessions1, sessions2], sort = False)
     sessions1 = None
     sessions2 = None
@@ -52,48 +64,48 @@ def main():
     sessions = classify_party(sessions, threshold = 0.5, two_party = True)
 
     # State 1 on State 2
-    #print(state1 + ' on ' + state2)
-    #train, test = split_by_state(demos1, demos2, sessions)
-    #eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = 0.9) 
-    #print("EI original criterion")
-    #ei_classifier(eis, test, 'democrat', mod = False)
-    #os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_ei_orig.png')
-    #print("EI modified criterion")
-    #ei_classifier(eis, test, 'democrat', mod = True)
-    #os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_ei_mod.png')
-    #print("RF Model")
-    #fit_rf_model(train, test) 
-    #os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_rf.png')
-    #print()
+    print(state1 + ' on ' + state2)
+    train, test = split_by_state(demos1, demos2, sessions)
+    eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = 0.9) 
+    print("EI original criterion")
+    ei_classifier(eis, test, 'democrat', mod = False)
+    os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_ei_orig.png')
+    print("EI modified criterion")
+    ei_classifier(eis, test, 'democrat', mod = True)
+    os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_ei_mod.png')
+    print("RF Model")
+    fit_rf_model(train, test) 
+    os.rename('confmat.png', 'combo_confmat/' + state1 + 'on' + state2 + '_rf.png')
+    print()
 
-    ## State 2 on State 1
-    #print(state2 + " on " + state1)
-    #train, test = split_by_state(demos2, demos1, sessions)
-    #eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = 0.9) 
-    #print("EI original criterion")
-    #ei_classifier(eis, test, 'democrat', mod = False)
-    #os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_ei_orig.png')
-    #print("EI modified criterion")
-    #ei_classifier(eis, test, 'democrat', mod = True)
-    #os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_ei_mod.png') 
-    #print("RF Model")
-    #fit_rf_model(train, test)
-    #os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_rf.png') 
-    #print()
-    #
-    ## Combined Model
-    #print("Combined Model")
+    # State 2 on State 1
+    print(state2 + " on " + state1)
+    train, test = split_by_state(demos2, demos1, sessions)
+    eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = 0.9) 
+    print("EI original criterion")
+    ei_classifier(eis, test, 'democrat', mod = False)
+    os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_ei_orig.png')
+    print("EI modified criterion")
+    ei_classifier(eis, test, 'democrat', mod = True)
+    os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_ei_mod.png') 
+    print("RF Model")
+    fit_rf_model(train, test)
+    os.rename('confmat.png', 'combo_confmat/' + state2 + 'on' + state1 + '_rf.png') 
+    print()
+    
+    # Combined Model
+    print("Combined Model")
     train, test = split_data(sessions)
     eis = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = 0.9)
     print("EI original criterion")
-    #ei_classifier(eis, test, 'democrat', mod = False)
-    #os.rename('confmat.png', 'combo_confmat/combo_ei_orig.png') 
-    #print("EI modified criterion")
-    #ei_classifier(eis, test, 'democrat', mod = True)
-    #os.rename('confmat.png', 'combo_confmat/combo_ei_mod.png')
-    #print("RF Model")
-    #fit_rf_model(train, test)
-    #os.rename('confmat.png', 'combo_confmat/combo_rf.png')
+    ei_classifier(eis, test, 'democrat', mod = False)
+    os.rename('confmat.png', 'combo_confmat/combo_ei_orig.png') 
+    print("EI modified criterion")
+    ei_classifier(eis, test, 'democrat', mod = True)
+    os.rename('confmat.png', 'combo_confmat/combo_ei_mod.png')
+    print("RF Model")
+    fit_rf_model(train, test)
+    os.rename('confmat.png', 'combo_confmat/combo_rf.png')
 
 
 if __name__ == '__main__':

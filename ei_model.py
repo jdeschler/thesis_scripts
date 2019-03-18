@@ -13,7 +13,6 @@ import matplotlib
 import operator
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
-#from joblib import dump, load
 import itertools
 from collections import Counter
 from sklearn.linear_model import LogisticRegressionCV
@@ -21,8 +20,13 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
+from helper_functions import *
 
-# from cleaning.py, fwiw this is the clunky version
+# global for party, needed to factor some pieces of code out
+global party_bool
+
+# transforms comscore sessions into usable matrix
+# transform_mat for race, transform_mat_party for party 
 def transform_mat(df):
     # extract demographics, save separately for re-linking later
     df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
@@ -48,6 +52,7 @@ def transform_mat(df):
 
 def transform_mat_party(df):
     # extract demographics, save separately for re-linking later
+    # key differnece is we must include the imputed columns (vf_k, etc.)
     df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children', 'racial_background','connection_speed',
@@ -67,11 +72,12 @@ def transform_mat_party(df):
     # merge demographics back, and write final
     final = df.merge(df_demos, on = 'machine_id')
     return final
-# create and print our confusion matrix!
+
+# plot_conf_mat to plot the confusion matrix
 # adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
-                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues,
-                  party = False):
+                  normalize = False, title = 'Confusion matrix', cmap = plt.cm.Blues):
+    party = party_bool
     cm = confusion_matrix(y_true, y_pred)
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
@@ -101,32 +107,16 @@ def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],
     plt.savefig('confmat.png')
     plt.clf()
     
-# Helper functions from CS109a final
-def split_data(df, threshold = 0.8):
-    msk = np.random.rand(len(df)) < threshold
-
-    data_train = df[msk]
-    data_test = df[~msk]
-    
-    return (data_train, data_test)
-
-def classification_accuracy(y_true, y_pred, party = False):
-    plot_conf_mat(y_true, y_pred, party = party)
-    total_missed = 0
-    for i in range(len(y_true)):
-        if y_true[i] != y_pred[i]:
-            total_missed += 1
-    return 1 - (total_missed/len(y_true))
-
 ################# EXCLUSIVITY INDEX MODELING ###############################
 
-# calc_exclusivity()
+# calc_exclusivity() and calc_exclusivity_v2()
 # inputs:
 #   df: the sample dataframe, with both demographics and matrix tranformation done
 #   axis: racial axis to calculate indices on
 #   n: number of top exclusivity indices to return
 # returns:
 #   dictionary of axis codes: top n domains by exclusivity index, over 95%, and by # of visits
+# use calc_exclusivity_v2, calc_exclusivity is deprecated
 
 def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.9):
     codes = list(np.unique(df[axis].values))
@@ -154,6 +144,7 @@ def calc_exclusivity(df, axis, n = 100, outfile = 'exclusivity_indices.csv', thr
     return final
 
 def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', threshold = 0.7):
+    # must get the domains in a usable format
     codes = list(np.unique(df[axis].values))
     domains = set(list(df)).difference(set(['machine_id', 'hoh_most_education', 'census_region', 'household_size', 'hoh_oldest_age', 'household_income', 'children', 'racial_background', 'connection_speed', 'country_of_origin', 'zip_code']))
     if axis == 'democrat':
@@ -167,6 +158,7 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
     for c in codes:
         visits_df[c] = ph
     counter = 0
+    # now that we have the domains in a df, calculate the numerator for each domain for each group
     for idx, row in visits_df.iterrows():
         tot = 0
         d = row['domain']
@@ -189,12 +181,21 @@ def calc_exclusivity_v2(df, axis, n = 100, outfile = 'exclusivity_indices.csv', 
         final_df.to_csv('party_eis_{}.csv'.format(int(threshold*10)), index = False)
     return final
 
+# ei_classifier
+# IN:
+#   eis: dataframe of exclusivity indices by race or party
+#   df: the df to test on (must be the testing set
+#   outcome: the outcome variable, racial_background or democrat
+#   mod: whether or not to use the modified criterion
+# RETURNS:
+#   Nothing, but saves confustion matrix and prints accuracies
 def ei_classifier(eis, df, outcome, mod = False):
     y_true = df[outcome].values
     df['pred'] = 0
     counter = 0
     y_hat_classified = []
     y_true_classified = []
+    # check each browsing history for the presence of the exclusive domains
     for idx, row in df.iterrows():
         counts = {c: 0 for c in list(eis)}
         for c in list(eis):
@@ -202,6 +203,7 @@ def ei_classifier(eis, df, outcome, mod = False):
             for d in range(len(domains)):
                 domain = domains[d]
                 try:
+                    # order by rank if using the modified criterion
                     if row[domain] > 0:
                         counts[c] += (101 - d) if mod else 1
                 except KeyError:
@@ -211,67 +213,17 @@ def ei_classifier(eis, df, outcome, mod = False):
         classify = max(counts.items(), key=operator.itemgetter(1))[0]
         classify = int(classify)
         df.at[idx, 'pred'] = classify
+        # actually make the classification
         if sum(list(counts.values())) > 0:
             y_hat_classified += [classify]
             y_true_classified += [df.at[idx, outcome]]
     y_hat = df['pred'].values
     party = False
     if outcome == 'democrat':
-        party = True
+        global party_bool
+        party_bool = True
     print("{} had none of the domains".format(counter))
-    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified, party = party)))
-
-############################################################################
-# subsample: returns a subsample of a dataframe weighted by certain targets
-#  IN: 
-#    n:       number of rows to be in subsample
-#    df:      dataframe to sample from
-#    demos:   list of demographics to weight on (comScore data column names)
-#    targets: list of dictionaries of weights (comScore code: weight)
-#  OUT:
-#    final dataframe subsample
-############################################################################
-
-def subsample(n, df, demos = ['racial_background'], targets = [{1: .5, 2: .35, 3: .1, 5: .05}]):
-    # start with code for just one demographic axis
-    targets = [{1:.5, 2:.35, 3:.1, 5:.05}]
-    demo = demos[0]
-    target = targets[0]
-    keys = list(target.keys())
-    dfs = {k: df[df[demo] == k] for k in keys}
-    
-    cols = list(df)
-    agg = pd.DataFrame(columns = cols)
-    
-    for k in keys:
-        n_k = round(target[k] * n) 
-        agg = agg.append(dfs[k].sample(n_k))
-    return agg
-
-def get_subsample(sessions, demos, n = 20000):
-    # get the subsample
-    demos = pd.read_csv(demos)
-    demos_sample = subsample(n, demos)
-    subsample_numbers = demos_sample['machine_id']
-
-    # read in the actual file and clean it here
-    df_full = pd.read_csv(sessions)
-    sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
-    print("{} unique domains in sample".format(len(sample['domain_name'].unique())))
-    df_final = transform_mat(sample)
-    
-    # force memory garbage collection
-    demos = None
-    df_full = None
-    sample = None
-    gc.collect()
-    return df_final
-
-def classify_party(df, threshold = 0.8, two_party = True):
-    comp_col = 'D_pct_2p' if two_party else 'D_pct'
-    threshold = float(threshold)
-    df['democrat'] = df.apply(lambda row: 1 if row[comp_col] > threshold else 0, axis = 1)
-    return df
+    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified))
 
 def main():
     parser.add_argument('-n', type=int, help='size of subsample')
@@ -291,6 +243,7 @@ def main():
     threshold = 0.8 if not args.threshold else float(args.threshold)
     out = 'exclusivity_indices.csv' if not args.outfile else str(args.outfile)
     excl_indices = None
+    # deal with race and party modeling differently
     if args.axis == 'D_pct' or args.axis == 'D_pct_2p':
         # no reading from a file of EIs for party
         # first get the demos and impute party
@@ -313,10 +266,13 @@ def main():
         train, sample = split_data(sample)
         excl_indices = calc_exclusivity_v2(train, 'democrat', n = 100, outfile = None, threshold = ei_thresh)
         outcome = 'democrat'
+    # race modeling
     else:
+        # we must re-calculate indicex
         if not args.infile:
             eis = []
             ei_df = pd.DataFrame()
+            # pseudo 10-fold validation
             for i in range(10):
                 sample = None
                 gc.collect()

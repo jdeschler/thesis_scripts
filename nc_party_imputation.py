@@ -8,6 +8,7 @@ import pandas as pd
 import sys
 
 # from https://stackoverflow.com/questions/7088009/python-try-except-as-an-expression
+# wrapper for Try-Except calls
 def try_except(success, arg, failure, *exceptions):
     try:
         return success(arg) if callable(success) else success
@@ -50,11 +51,13 @@ def main():
     if len(sys.argv) != 3:
         print('Usage: python nc_party_imputation.py NC_voterfile.txt NC_demos.csv')
         exit(1)
+    # read in voter file
     vf = pd.read_csv(sys.argv[1], sep='\t',\
              usecols=['zip_code','race_code','party_cd','birth_age'],\
              lineterminator='\n', encoding = "ISO-8859-1")
     demos = pd.read_csv(sys.argv[2])
     demo_cols = list(demos)
+    # impute necessary columns
     if 'D_pct' not in demo_cols:
         demos['D_pct'] = 0
     if 'D_pct_2p' not in demo_cols:
