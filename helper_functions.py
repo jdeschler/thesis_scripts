@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 def classification_accuracy(y_true, y_pred):
     plot_conf_mat(y_true, y_pred)
     total_missed = 0
-    for i in range(len(y_true))
+    for i in range(len(y_true)):
         if y_true[i] != y_pred[i]:
             total_missed += 1
     return 1 - (total_missed/len(y_true))
