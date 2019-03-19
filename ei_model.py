@@ -25,54 +25,6 @@ from helper_functions import *
 # global for party, needed to factor some pieces of code out
 global party_bool
 
-# transforms comscore sessions into usable matrix
-# transform_mat for race, transform_mat_party for party 
-def transform_mat(df):
-    # extract demographics, save separately for re-linking later
-    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
-                   'household_size', 'hoh_oldest_age', 'household_income',
-                   'children', 'racial_background','connection_speed',
-                   'country_of_origin','zip_code']]
-    df_demos = df_demos.drop_duplicates('machine_id')
-    # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
-         'tran_flg', 'hoh_most_education', 'census_region',
-         'household_size', 'hoh_oldest_age', 'household_income',
-         'children', 'racial_background','connection_speed',
-         'country_of_origin','zip_code'], axis = 1)
-    # use pivot to get the data in the format we want
-    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
-    df = pd.DataFrame(df.to_records())
-    df = df.fillna(0)
-    print("{} columns in the transformed matrix".format(len(list(df))))
-    # merge demographics back, and write final
-    final = df.merge(df_demos, on = 'machine_id')
-    return final 
-
-
-def transform_mat_party(df):
-    # extract demographics, save separately for re-linking later
-    # key differnece is we must include the imputed columns (vf_k, etc.)
-    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
-                   'household_size', 'hoh_oldest_age', 'household_income',
-                   'children', 'racial_background','connection_speed',
-                   'country_of_origin','zip_code', 'D_pct','D_pct_2p',
-                   'vf_k', 'vf_k_2p']]
-    df_demos = df_demos.drop_duplicates('machine_id')
-    # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['hoh_most_education', 'census_region',
-         'household_size', 'hoh_oldest_age', 'household_income',
-         'children', 'racial_background','connection_speed',
-         'country_of_origin','zip_code'], axis = 1)
-    # use pivot to get the data in the format we want
-    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
-    df = pd.DataFrame(df.to_records())
-    df = df.fillna(0)
-    print("{} columns in the transformed matrix".format(len(list(df))))
-    # merge demographics back, and write final
-    final = df.merge(df_demos, on = 'machine_id')
-    return final
-
 # plot_conf_mat to plot the confusion matrix
 # adapted from https://scikit-learn.org/stable/auto_examples/model_selection/plot_confusion_matrix.html#sphx-glr-auto-examples-model-selection-plot-confusion-matrix-py
 def plot_conf_mat(y_true, y_pred, classes=['White','Black','Asian','Other'],

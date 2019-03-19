@@ -6,10 +6,7 @@
 #  - Confusion Matrices and Accuracy
 #  - Party Classification
 #  - Subsampling
-# Note: Matrix transformation is not included here, as each model
-#  needs a slightly different matrix transformation function pertaining
-#  to which demographics are being dropped
-
+#  - Matrix Transformation
 # Dependencies:
 import numpy as np
 import pandas as pd
@@ -82,8 +79,8 @@ def classify_party(df, threshold = 0.8, two_party = True):
 #  samples by machine number, so we get n users
 #  if n is set, uses subsample() to weight race a certain way (see below)
 #  if n is not set, simply uses the entire set of demographics
-#  calls transform mat, collects garbage and returns transformed matrix 
-def get_subsample(sessions, demos, n = -1, targets = [{1: .766, 2: .134, 3: .058, 5: .042}]):
+#  calls respecitve transform mat, collects garbage and returns transformed matrix 
+def get_subsample(sessions, demos, n = -1, targets = [{1: .766, 2: .134, 3: .058, 5: .042}], party = False):
     # get the subsample
     demos = pd.read_csv(demos)
     demos_sample = demos if n == -1 else subsample(n, demos, targets = targets)
@@ -92,7 +89,7 @@ def get_subsample(sessions, demos, n = -1, targets = [{1: .766, 2: .134, 3: .058
     # read in the actual file and clean it here
     df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
-    df_final = transform_mat(sample)
+    df_final = transform_mat_party if party else transform_mat(sample)
 
     # force memory garbage collection
     demos = None
@@ -134,3 +131,51 @@ def subsample(n, df, demos = ['racial_background'], targets = [{1: .766, 2: .134
         agg = agg.append(dfs[k].sample(n_k))
     return agg
 
+###### Matrix Transformation #######
+# transforms comscore sessions into usable matrix
+# transform_mat for race, transform_mat_party for party 
+def transform_mat(df):
+    # extract demographics, save separately for re-linking later
+    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
+                   'household_size', 'hoh_oldest_age', 'household_income',
+                   'children', 'racial_background','connection_speed',
+                   'country_of_origin','zip_code']]
+    df_demos = df_demos.drop_duplicates('machine_id')
+    # drop columns we don't need, and demos, bc we already saved those
+    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
+         'tran_flg', 'hoh_most_education', 'census_region',
+         'household_size', 'hoh_oldest_age', 'household_income',
+         'children', 'racial_background','connection_speed',
+         'country_of_origin','zip_code'], axis = 1)
+    # use pivot to get the data in the format we want
+    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
+    df = pd.DataFrame(df.to_records())
+    df = df.fillna(0)
+    print("{} columns in the transformed matrix".format(len(list(df))))
+    # merge demographics back, and write final
+    final = df.merge(df_demos, on = 'machine_id')
+    return final
+
+
+def transform_mat_party(df):
+    # extract demographics, save separately for re-linking later
+    # key differnece is we must include the imputed columns (vf_k, etc.)
+    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
+                   'household_size', 'hoh_oldest_age', 'household_income',
+                   'children', 'racial_background','connection_speed',
+                   'country_of_origin','zip_code', 'D_pct','D_pct_2p',
+                   'vf_k', 'vf_k_2p']]
+    df_demos = df_demos.drop_duplicates('machine_id')
+    # drop columns we don't need, and demos, bc we already saved those
+    df = df.drop(['hoh_most_education', 'census_region',
+         'household_size', 'hoh_oldest_age', 'household_income',
+         'children', 'racial_background','connection_speed',
+         'country_of_origin','zip_code'], axis = 1)
+    # use pivot to get the data in the format we want
+    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
+    df = pd.DataFrame(df.to_records())
+    df = df.fillna(0)
+    print("{} columns in the transformed matrix".format(len(list(df))))
+    # merge demographics back, and write final
+    final = df.merge(df_demos, on = 'machine_id')
+    return final

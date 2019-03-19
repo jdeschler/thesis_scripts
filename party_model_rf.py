@@ -19,30 +19,6 @@ from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
 from helper_functions import *
 
-# transforms comscore sessions into usable matrix  
-def transform_mat(df):
-    # extract demographics, save separately for re-linking later
-    print(list(df))
-    df_demos = df[['machine_id', 'hoh_most_education', 'census_region',
-                   'household_size', 'hoh_oldest_age', 'household_income',
-                   'children', 'racial_background','connection_speed',
-                   'country_of_origin','zip_code', 'vf_k', 'vf_k_2p',
-                   'D_pct', 'D_pct_2p']]
-    df_demos = df_demos.drop_duplicates('machine_id')
-    # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['hoh_most_education', 'census_region',
-         'household_size', 'hoh_oldest_age', 'household_income',
-         'children', 'racial_background','connection_speed',
-         'country_of_origin','zip_code', 'vf_k', 'vf_k_2p',
-         'D_pct', 'D_pct_2p'], axis = 1)
-    # use pivot to get the data in the format we want
-    df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = np.sum)
-    df = pd.DataFrame(df.to_records())
-    df = df.fillna(0)
-    # merge demographics back, and return final
-    final = df.merge(df_demos, on = 'machine_id')
-    return final 
-
 def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',
                    'children','connection_speed',
@@ -110,7 +86,7 @@ def main():
     args = parser.parse_args() 
     n = -1 if not args.n else args.n
     threshold = 0.8 if not args.threshold else args.threshold
-    sample = get_subsample(args.Sessions, args.demos, n = n)
+    sample = get_subsample(args.Sessions, args.demos, n = n, party = True)
     sample = classify_party(sample, threshold = threshold, two_party = args.twoparty)
     fit_models(sample)
     exit(0) 
