@@ -119,7 +119,7 @@ def get_subsample(sessions, demos, n = -1, targets = [{1: .766, 2: .134, 3: .058
     # read in the actual file and clean it here
     df_full = pd.read_csv(sessions)
     sample = df_full[df_full['machine_id'].isin(subsample_numbers)]
-    df_final = transform_mat_party if party else transform_mat(sample)
+    df_final = transform_mat_party(sample) if party else transform_mat(sample)
 
     # force memory garbage collection
     demos = None
