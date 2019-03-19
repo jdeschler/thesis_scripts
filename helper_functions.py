@@ -14,6 +14,7 @@ import scipy as sp
 import gc
 import itertools
 import matplotlib
+from sklearn.metrics import confusion_matrix
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
