@@ -142,11 +142,14 @@ def transform_mat(df):
                    'country_of_origin','zip_code']]
     df_demos = df_demos.drop_duplicates('machine_id')
     # drop columns we don't need, and demos, bc we already saved those
-    df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration',
-         'tran_flg', 'hoh_most_education', 'census_region',
+    df = df.drop(['hoh_most_education', 'census_region',
          'household_size', 'hoh_oldest_age', 'household_income',
          'children', 'racial_background','connection_speed',
          'country_of_origin','zip_code'], axis = 1)
+    try:
+        df = df.drop(['site_session_id', 'domain_id', 'ref_domain_name', 'duration', 'tran_flg'], axis = 1)
+    except KeyError:
+        pass
     # use pivot to get the data in the format we want
     df = df.pivot_table(index='machine_id', columns='domain_name', values='pages_viewed', aggfunc = lambda x: np.sum(x).astype(bool).astype(int))
     df = pd.DataFrame(df.to_records())
