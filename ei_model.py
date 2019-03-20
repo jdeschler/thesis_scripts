@@ -141,7 +141,7 @@ def ei_classifier(eis, df, outcome, mod = False):
         global party_bool
         party_bool = True
     print("{} had none of the domains".format(counter))
-    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified))
+    print("Overall accuracy (among classified): {}".format(classification_accuracy(y_true_classified, y_hat_classified)))
 
 def main():
     parser.add_argument('-n', type=int, help='size of subsample')
