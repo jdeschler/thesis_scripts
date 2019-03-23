@@ -20,7 +20,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
-from helper_functions import *
+from nmp_helpers import *
 
 # global for party, needed to factor some pieces of code out
 global party_bool

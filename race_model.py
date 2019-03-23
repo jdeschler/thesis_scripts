@@ -18,7 +18,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
-from helper_functions import *
+from nmp_helpers import *
 
 # Fit the random Forest model!
 def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education', 'census_region',

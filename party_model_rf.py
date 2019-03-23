@@ -17,7 +17,7 @@ from sklearn.linear_model import LogisticRegressionCV
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 parser = argparse.ArgumentParser()
-from helper_functions import *
+from nmp_helpers import *
 
 def fit_rf_model(df_train, df_test, demos = ['machine_id', 'hoh_most_education', 'census_region',
                    'household_size', 'hoh_oldest_age', 'household_income',

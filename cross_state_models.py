@@ -22,7 +22,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix
 from party_model_rf import fit_rf_model
 from ei_model import *
-from helper_functions import *
+from nmp_helpers import *
 parser = argparse.ArgumentParser()
 
 # split_by_state(demos1, demos2, df)
