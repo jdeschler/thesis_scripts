@@ -1,0 +1,117 @@
+149535 columns in the transformed matrix
+northfl16 on nc16
+EI original criterion
+1338 had none of the domains
+Confusion matrix, without normalization
+[[528 135]
+ [306 254]]
+Overall accuracy (among classified): 0.6394112837285364
+EI modified criterion
+1338 had none of the domains
+Confusion matrix, without normalization
+[[509 154]
+ [286 274]]
+Overall accuracy (among classified): 0.6402289452166803
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[1347   17]
+ [1125   72]]
+Overall accuracy: 0.5540804373291683
+
+CONFUSION MATIX:
+       pred + pred -
+true +     72   1125
+true -     17   1347
+
+TRUE POSITIVE: 0.8089887640449438
+TRUE NEGATIVE: 0.5449029126213593
+Top 10 Features
+1. homedepot.com
+2. weather.com
+3. fsu.edu
+4. yelp.com
+5. ebay.com
+6. agame.com
+7. lowes.com
+8. worldstarhiphop.com
+9. brassring.com
+10. myflorida.com
+
+nc16 on northfl16
+EI original criterion
+609 had none of the domains
+Confusion matrix, without normalization
+[[184  50]
+ [ 49  79]]
+Overall accuracy (among classified): 0.7265193370165746
+EI modified criterion
+609 had none of the domains
+Confusion matrix, without normalization
+[[177  57]
+ [ 42  86]]
+Overall accuracy (among classified): 0.7265193370165746
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[499 110]
+ [194 168]]
+Overall accuracy: 0.6869207003089599
+
+CONFUSION MATIX:
+       pred + pred -
+true +    168    194
+true -    110    499
+
+TRUE POSITIVE: 0.60431654676259
+TRUE NEGATIVE: 0.7200577200577201
+Top 10 Features
+1. brassring.com
+2. foxnews.com
+3. soundcloud.com
+4. worldstarhiphop.com
+5. ncdot.gov
+6. lowes.com
+7. everyjobforme.com
+8. ncworks.gov
+9. nps.gov
+10. 123movies.is
+
+Combined Model
+EI original criterion
+445 had none of the domains
+Confusion matrix, without normalization
+[[104  38]
+ [ 38  71]]
+Overall accuracy (among classified): 0.6972111553784861
+EI modified criterion
+445 had none of the domains
+Confusion matrix, without normalization
+[[101  41]
+ [ 33  76]]
+Overall accuracy (among classified): 0.7051792828685259
+RF Model
+fitting random forest model
+Confusion matrix, without normalization
+[[338  37]
+ [225  96]]
+Overall accuracy: 0.6235632183908046
+
+CONFUSION MATIX:
+       pred + pred -
+true +     96    225
+true -     37    338
+
+TRUE POSITIVE: 0.7218045112781954
+TRUE NEGATIVE: 0.6003552397868561
+Top 10 Features
+1. weather.com
+2. lowes.com
+3. brassring.com
+4. netu.tv
+5. worldstarhiphop.com
+6. soundcloud.com
+7. snagajob.com
+8. etsy.com
+9. mp3juices.cc
+10. taleo.net
