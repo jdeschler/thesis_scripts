@@ -1,8 +1,8 @@
 # Jack Deschler
 # The New Machine Politics
-# helper_functions.py
+# nmp_helpers.py 
 #  contains functions used commonly in modeling code
-# 3 sections:
+# 4 sections:
 #  - Confusion Matrices and Accuracy
 #  - Party Classification
 #  - Subsampling
